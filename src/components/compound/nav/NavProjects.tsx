@@ -1,11 +1,5 @@
+// src/components/compound/nav/NavProjects.tsx
 'use client';
-
-import {
-  IconFolder,
-  IconShare,
-  IconDots,
-  IconTrash
-} from '@tabler/icons-react';
 
 import {
   DropdownMenu,
@@ -23,8 +17,17 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@ui/sidebar';
-import { Icon } from '@icons';
+import { Icon, Icons } from '@icons';
 
+/**
+ * NavProjects Compound Component
+ * 
+ * Purpose: Projects navigation section with context menu
+ * Combines: sidebar UI primitives with dropdown menu logic
+ * 
+ * @param projects - Project items with actions
+ * @returns Projects navigation section JSX
+ */
 export function NavProjects({
   projects
 }: {
@@ -51,7 +54,7 @@ export function NavProjects({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction showOnHover>
-                  <IconDots />
+                  <Icons.dots />
                   <span className='sr-only'>More</span>
                 </SidebarMenuAction>
               </DropdownMenuTrigger>
@@ -61,16 +64,16 @@ export function NavProjects({
                 align={isMobile ? 'end' : 'start'}
               >
                 <DropdownMenuItem>
-                  <IconFolder className='text-muted-foreground mr-2 h-4 w-4' />
+                  <Icons.folder className='text-muted-foreground mr-2 h-4 w-4' />
                   <span>View Project</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <IconShare className='text-muted-foreground mr-2 h-4 w-4' />
+                  <Icons.share className='text-muted-foreground mr-2 h-4 w-4' />
                   <span>Share Project</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <IconTrash className='text-muted-foreground mr-2 h-4 w-4' />
+                  <Icons.trash className='text-muted-foreground mr-2 h-4 w-4' />
                   <span>Delete Project</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -79,7 +82,7 @@ export function NavProjects({
         ))}
         <SidebarMenuItem>
           <SidebarMenuButton className='text-sidebar-foreground/70'>
-            <IconDots className='text-sidebar-foreground/70' />
+            <Icons.dots className='text-sidebar-foreground/70' />
             <span>More</span>
           </SidebarMenuButton>
         </SidebarMenuItem>

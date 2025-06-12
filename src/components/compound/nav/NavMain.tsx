@@ -1,6 +1,5 @@
+// src/components/compound/nav/NavMain.tsx
 'use client';
-
-import { IconChevronRight } from '@tabler/icons-react';
 
 import {
   Collapsible,
@@ -18,8 +17,17 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from '@ui/sidebar';
-import { Icon } from '@icons';
+import { Icon, Icons } from '@icons';
 
+/**
+ * NavMain Compound Component
+ * 
+ * Purpose: Main navigation section with collapsible menu items
+ * Combines: sidebar UI primitives with navigation logic
+ * 
+ * @param items - Navigation items with optional sub-items
+ * @returns Main navigation section JSX
+ */
 export function NavMain({
   items
 }: {
@@ -54,7 +62,7 @@ export function NavMain({
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
-                    <IconChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                    <Icons.chevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>

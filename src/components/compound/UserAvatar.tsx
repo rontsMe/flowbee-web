@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@ui/avatar';
 
-interface UserAvatarProfileProps {
+interface UserAvatarProps {
   className?: string;
   showInfo?: boolean;
   user: {
@@ -10,11 +10,11 @@ interface UserAvatarProfileProps {
   } | null;
 }
 
-export function UserAvatarProfile({
+export function UserAvatar({
   className,
   showInfo = false,
   user
-}: UserAvatarProfileProps) {
+}: UserAvatarProps) {
   return (
     <div className='flex items-center gap-2'>
       <Avatar className={className}>

@@ -1,3 +1,4 @@
+// components/icons.tsx
 import {
   IconAlertTriangle,
   IconArrowRight,
@@ -30,7 +31,16 @@ import {
   IconUserX,
   IconX,
   IconLayoutKanban,
-  IconBrandGithub
+  IconBrandGithub,
+  // Additional icons for navigation
+  IconFolder,
+  IconShare,
+  IconDots,
+  IconCircleCheck,
+  IconBell,
+  IconChevronsDown,
+  IconLogout,
+  IconSparkles
 } from '@tabler/icons-react';
 
 export type Icon = React.ComponentType<IconProps>;
@@ -66,5 +76,15 @@ export const Icons = {
   laptop: IconDeviceLaptop,
   github: IconBrandGithub,
   twitter: IconBrandTwitter,
-  check: IconCheck
+  check: IconCheck,
+  
+  // Navigation specific icons
+  folder: IconFolder,
+  share: IconShare,
+  dots: IconDots,
+  checkCircle: IconCircleCheck,
+  bell: IconBell,
+  chevronsDown: IconChevronsDown,
+  logout: IconLogout,
+  sparkles: IconSparkles
 };
