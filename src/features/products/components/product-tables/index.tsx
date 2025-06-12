@@ -1,7 +1,7 @@
 'use client';
 
-import { DataTable } from '@/components/ui/table/data-table';
-import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
+import { DataTable } from '@ui/table/data-table';
+import { DataTableToolbar } from '@ui/table/data-table-toolbar';
 
 import { useDataTable } from '@/hooks/use-data-table';
 

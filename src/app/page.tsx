@@ -1,660 +1,628 @@
 'use client';
-
+import { useTheme } from 'next-themes';
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@ui/card';
-import { Badge } from '@ui/badge';
-import { Button } from '@ui/button';
-import { Progress } from '@ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ui/tabs';
-import { ScrollArea } from '@ui/scroll-area';
-import { Separator } from '@ui/separator';
 import { 
-  Activity, 
-  Clock, 
-  CheckCircle, 
-  AlertCircle, 
-  XCircle, 
-  Cpu, 
-  HardDrive, 
-  Zap,
-  PlayCircle,
-  PauseCircle,
-  RotateCcw,
-  Eye,
-  BarChart3,
-  Settings,
+  Search, 
+  Settings, 
+  ChevronLeft, 
+  ChevronRight,
+  Activity,
   Workflow,
-  TrendingUp,
-  TrendingDown,
+  Database,
+  BarChart3,
+  FileText,
+  GitBranch,
+  Eye,
+  Layers,
+  Monitor,
+  MemoryStick,
+  Cpu,
+  Clock,
+  Sun,
+  Moon,
+  Bell,
+  LogOut,
+  Home,
+  Play,
+  Pause,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  MoreHorizontal,
+  PanelLeftIcon
 } from 'lucide-react';
 
-// Type definitions based on Flowbee architecture
-interface WorkflowExecutionRecord {
+// Import existing project components
+import { Button } from '@ui/button';
+import { Input } from '@ui/input';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@ui/card';
+import { Badge } from '@ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ui/tabs';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuBadge,
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarInset,
+  useSidebar
+} from '@ui/sidebar';
+import { Separator } from '@ui/separator';
+
+// Types
+interface SystemMetrics {
+  threads: { current: number; max: number };
+  memory: number;
+  cpu: number;
+  refreshRate: number;
+}
+
+interface WorkflowItem {
   id: string;
   name: string;
   status: 'running' | 'completed' | 'failed' | 'pending';
   progress: number;
   startTime: string;
-  estimatedCompletion?: string;
-  completedTime?: string;
-  failedTime?: string;
-  totalMethods: number;
-  completedMethods: number;
-  failedMethods: number;
-  currentMethod?: string;
-  priority: 'high' | 'medium' | 'low';
-  error?: string;
-}
-
-interface MethodExecutionRecord {
-  name: string;
-  status: 'running' | 'completed' | 'failed' | 'pending';
-  duration?: number;
-  startTime?: string;
-  endTime?: string;
-  threadUsage: number;
-  memoryUsage: number;
-  type: 'sync_cpu' | 'async_io';
-  progress?: number;
-}
-
-interface SystemMetrics {
-  cpuUsage: number;
-  memoryUsage: number;
-  activeThreads: number;
-  totalThreads: number;
-  queuedMethods: number;
-  runningWorkflows: number;
-  completedToday: number;
-  failureRate: number;
-}
-
-interface SystemMetricsCardProps {
-  title: string;
-  value: number;
-  unit: string;
-  icon: React.ComponentType<{ className?: string }>;
-  trend?: 'up' | 'down';
-  trendValue?: string;
-}
-
-interface StatusIconProps {
-  status: 'running' | 'completed' | 'failed' | 'pending';
-  className?: string;
-}
-
-interface StatusBadgeProps {
-  status: 'running' | 'completed' | 'failed' | 'pending';
-}
-
-interface PriorityBadgeProps {
+  duration?: string;
+  methods: number;
   priority: 'high' | 'medium' | 'low';
 }
 
-interface WorkflowCardProps {
-  workflow: WorkflowExecutionRecord;
+interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  href: string;
+  badge?: number;
 }
 
-interface MethodExecutionRowProps {
-  method: MethodExecutionRecord;
-}
+const ThemeToggle: React.FC = () => {
+  const { theme, setTheme } = useTheme();
+  const isDark = theme === 'dark';
 
-// Mock data - replace with real API calls
-const mockWorkflows: WorkflowExecutionRecord[] = [
-  {
-    id: 'wf-001',
-    name: 'Video Processing Pipeline',
-    status: 'running',
-    progress: 65,
-    startTime: '2025-06-11T10:30:00Z',
-    estimatedCompletion: '2025-06-11T11:45:00Z',
-    totalMethods: 8,
-    completedMethods: 5,
-    failedMethods: 0,
-    currentMethod: 'extract_transcript',
-    priority: 'high'
-  },
-  {
-    id: 'wf-002', 
-    name: 'Audio Enhancement',
-    status: 'completed',
-    progress: 100,
-    startTime: '2025-06-11T09:15:00Z',
-    completedTime: '2025-06-11T10:20:00Z',
-    totalMethods: 6,
-    completedMethods: 6,
-    failedMethods: 0,
-    priority: 'medium'
-  },
-  {
-    id: 'wf-003',
-    name: 'Metadata Extraction',
-    status: 'failed',
-    progress: 45,
-    startTime: '2025-06-11T08:45:00Z',
-    failedTime: '2025-06-11T09:30:00Z',
-    totalMethods: 5,
-    completedMethods: 2,
-    failedMethods: 1,
-    currentMethod: 'validate_quality',
-    priority: 'low',
-    error: 'Network timeout during audio download'
-  }
-];
-
-const mockMethods: MethodExecutionRecord[] = [
-  {
-    name: 'extract_video_id',
-    status: 'completed',
-    duration: 2.3,
-    startTime: '10:30:15',
-    endTime: '10:30:17',
-    threadUsage: 15,
-    memoryUsage: 24,
-    type: 'sync_cpu'
-  },
-  {
-    name: 'download_audio',
-    status: 'completed', 
-    duration: 45.7,
-    startTime: '10:30:17',
-    endTime: '10:31:03',
-    threadUsage: 40,
-    memoryUsage: 156,
-    type: 'async_io'
-  },
-  {
-    name: 'enhance_audio',
-    status: 'completed',
-    duration: 12.4,
-    startTime: '10:31:03', 
-    endTime: '10:31:15',
-    threadUsage: 60,
-    memoryUsage: 89,
-    type: 'sync_cpu'
-  },
-  {
-    name: 'extract_transcript',
-    status: 'running',
-    duration: 67.2,
-    startTime: '10:31:15',
-    threadUsage: 85,
-    memoryUsage: 245,
-    type: 'sync_cpu',
-    progress: 78
-  },
-  {
-    name: 'translate_text',
-    status: 'pending',
-    threadUsage: 0,
-    memoryUsage: 0,
-    type: 'async_io'
-  }
-];
-
-const mockSystemMetrics: SystemMetrics = {
-  cpuUsage: 67,
-  memoryUsage: 42,
-  activeThreads: 12,
-  totalThreads: 16,
-  queuedMethods: 8,
-  runningWorkflows: 3,
-  completedToday: 47,
-  failureRate: 2.1
-};
-
-const StatusIcon: React.FC<StatusIconProps> = ({ status, className = "w-4 h-4" }) => {
-  switch (status) {
-    case 'running':
-      return <Activity className={`${className} text-blue-500 animate-pulse`} />;
-    case 'completed':
-      return <CheckCircle className={`${className} text-green-500`} />;
-    case 'failed':
-      return <XCircle className={`${className} text-red-500`} />;
-    case 'pending':
-      return <Clock className={`${className} text-gray-400`} />;
-    default:
-      return <Clock className={`${className} text-gray-400`} />;
-  }
-};
-
-const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
-  const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-    running: 'default',
-    completed: 'secondary', 
-    failed: 'destructive',
-    pending: 'outline'
-  };
-  
   return (
-    <Badge variant={variants[status]} className="capitalize">
-      {status}
-    </Badge>
+    <Button
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      variant="ghost"
+      size="icon"
+      className="h-8 w-8"
+    >
+      {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+    </Button>
   );
 };
 
-const PriorityBadge: React.FC<PriorityBadgeProps> = ({ priority }) => {
-  const colors: Record<string, string> = {
-    high: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', 
-    low: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-  };
-  
-  return (
-    <Badge className={colors[priority]} variant="outline">
-      {priority}
-    </Badge>
-  );
-};
 
-const WorkflowCard: React.FC<WorkflowCardProps> = ({ workflow }) => {
-  const formatTime = (timeStr: string): string => {
-    return new Date(timeStr).toLocaleTimeString();
-  };
-  
-  const getElapsedTime = (startTime: string, endTime?: string): string => {
-    const start = new Date(startTime);
-    const end = endTime ? new Date(endTime) : new Date();
-    const diff = Math.floor((end.getTime() - start.getTime()) / 1000 / 60);
-    return `${diff}m`;
-  };
+// App Sidebar using project components
+const AppSidebar: React.FC<{ systemMetrics: SystemMetrics }> = ({ systemMetrics }) => {
+  const primaryNavItems: NavItem[] = [
+    { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/dashboard' },
+    { id: 'workflows', label: 'Workflows', icon: Workflow, href: '/workflows', badge: 12 },
+    { id: 'methods', label: 'Methods', icon: Activity, href: '/methods', badge: 45 },
+    { id: 'services', label: 'Services', icon: Database, href: '/services', badge: 8 },
+    { id: 'templates', label: 'Templates', icon: FileText, href: '/templates' },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3, href: '/analytics' },
+    { id: 'logs', label: 'Logs', icon: FileText, href: '/logs' }
+  ];
+
+  const devToolsItems: NavItem[] = [
+    { id: 'dependency', label: 'Dependency Graph', icon: GitBranch, href: '/dev/dependency' },
+    { id: 'inspector', label: 'Method Inspector', icon: Eye, href: '/dev/inspector' },
+    { id: 'resolver', label: 'Resolver Viewer', icon: Layers, href: '/dev/resolver' }
+  ];
+
+  const [activeItem, setActiveItem] = useState('workflows');
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <StatusIcon status={workflow.status} />
-            <CardTitle className="text-base font-semibold">{workflow.name}</CardTitle>
+    <Sidebar className="bg-sidebar">
+      <SidebarHeader className="bg-sidebar">
+        <div className="flex items-center gap-3 px-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <Workflow className="w-5 h-5 text-white" />
           </div>
-          <div className="flex items-center gap-2">
-            <PriorityBadge priority={workflow.priority} />
-            <StatusBadge status={workflow.status} />
-          </div>
+          <span className="text-lg font-bold text-sidebar-foreground">Flowbee</span>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Progress</span>
-          <span className="font-medium">{workflow.completedMethods}/{workflow.totalMethods} methods</span>
-        </div>
-        
-        <Progress value={workflow.progress} className="h-2" />
-        
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <div className="text-muted-foreground">Started</div>
-            <div className="font-medium">{formatTime(workflow.startTime)}</div>
-          </div>
-          <div>
-            <div className="text-muted-foreground">
-              {workflow.status === 'running' ? 'ETA' : workflow.status === 'completed' ? 'Completed' : 'Failed'}
+      </SidebarHeader>
+
+      <SidebarContent className="bg-sidebar">
+        {/* Primary Navigation */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Primary</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {primaryNavItems.map((item) => (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton
+                    isActive={activeItem === item.id}
+                    onClick={() => setActiveItem(item.id)}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                    {item.badge && (
+                      <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                    )}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <Separator />
+
+        {/* Dev Tools */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Dev Tools</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {devToolsItems.map((item) => (
+                <SidebarMenuItem key={item.id}>
+                  <SidebarMenuButton
+                    isActive={activeItem === item.id}
+                    onClick={() => setActiveItem(item.id)}
+                  >
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <Separator />
+
+        {/* System Status */}
+        <SidebarGroup>
+          <SidebarGroupLabel>System Status</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <div className="space-y-2 px-2">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <Monitor className="w-3 h-3" />
+                  <span>Threads</span>
+                </div>
+                <span className="font-mono">{systemMetrics.threads.current}/{systemMetrics.threads.max}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <MemoryStick className="w-3 h-3" />
+                  <span>Memory</span>
+                </div>
+                <span className="font-mono">{systemMetrics.memory}%</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <Cpu className="w-3 h-3" />
+                  <span>CPU</span>
+                </div>
+                <span className="font-mono">{systemMetrics.cpu}%</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3 h-3" />
+                  <span>Refresh</span>
+                </div>
+                <span className="font-mono">{systemMetrics.refreshRate}s</span>
+              </div>
             </div>
-            <div className="font-medium">
-              {workflow.status === 'running' && workflow.estimatedCompletion 
-                ? formatTime(workflow.estimatedCompletion)
-                : workflow.completedTime 
-                ? formatTime(workflow.completedTime)
-                : workflow.failedTime
-                ? formatTime(workflow.failedTime)
-                : 'N/A'
-              }
-            </div>
-          </div>
-        </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      <SidebarFooter className="bg-sidebar">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <Settings className="w-4 h-4" />
+              <span>Settings</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
         
-        {workflow.currentMethod && (
-          <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
-            <Activity className="w-3 h-3 text-blue-500 animate-pulse" />
-            <span className="text-sm font-medium">Current: {workflow.currentMethod}</span>
+        <div className="flex items-center gap-3 px-2 py-2">
+          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+            <span className="text-xs font-medium text-white">ZR</span>
           </div>
-        )}
-        
-        {workflow.error && (
-          <div className="flex items-start gap-2 p-2 bg-red-50 dark:bg-red-950 rounded-md">
-            <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-            <span className="text-sm text-red-700 dark:text-red-300">{workflow.error}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium truncate">Zahid Ronty</p>
+            <p className="text-xs text-muted-foreground truncate">zahid.ronty@email.com</p>
           </div>
-        )}
-        
-        <div className="flex items-center gap-1">
-          <Button size="sm" variant="outline" className="h-7">
-            <Eye className="w-3 h-3 mr-1" />
-            View
+          <Button variant="ghost" size="icon" className="h-6 w-6">
+            <LogOut className="w-3 h-3" />
           </Button>
-          {workflow.status === 'running' && (
-            <Button size="sm" variant="outline" className="h-7">
-              <PauseCircle className="w-3 h-3 mr-1" />
-              Pause
-            </Button>
-          )}
-          {workflow.status === 'failed' && (
-            <Button size="sm" variant="outline" className="h-7">
-              <RotateCcw className="w-3 h-3 mr-1" />
-              Retry
-            </Button>
-          )}
         </div>
-      </CardContent>
-    </Card>
+      </SidebarFooter>
+    </Sidebar>
   );
 };
 
-const MethodExecutionRow: React.FC<MethodExecutionRowProps> = ({ method }) => {
+// Top Navbar Component using project components
+const TopNavbar: React.FC = () => {
+  const breadcrumbs = [
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Workflows', href: '/workflows' }
+  ];
+
   return (
-    <div className="flex items-center justify-between p-3 border rounded-lg">
-      <div className="flex items-center gap-3">
-        <StatusIcon status={method.status} />
-        <div>
-          <div className="font-medium text-sm">{method.name}</div>
-          <div className="text-xs text-muted-foreground">{method.type}</div>
-        </div>
-      </div>
+    <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-background">
+      <SidebarTrigger className="-ml-1" />
+      <Separator orientation="vertical" className="mr-2 h-4" />
       
-      <div className="flex items-center gap-6 text-sm">
-        {method.status === 'running' && method.progress && (
-          <div className="flex items-center gap-2">
-            <Progress value={method.progress} className="w-16 h-1" />
-            <span className="text-xs">{method.progress}%</span>
+      {/* Breadcrumbs */}
+      <nav className="flex items-center space-x-2 text-sm">
+        {breadcrumbs.map((item, index) => (
+          <div key={item.href} className="flex items-center">
+            {index > 0 && <span className="text-muted-foreground mx-2">/</span>}
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`h-auto p-0 ${
+                index === breadcrumbs.length - 1
+                  ? 'text-blue-600 dark:text-blue-400 font-medium'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {item.label}
+            </Button>
           </div>
-        )}
-        
-        <div className="text-right">
-          <div className="font-medium">
-            {method.duration ? `${method.duration}s` : method.status === 'running' ? 'Running...' : 'Pending'}
-          </div>
-          <div className="text-xs text-muted-foreground">
-            {method.startTime && `Started ${method.startTime}`}
-          </div>
-        </div>
-        
-        <div className="text-right min-w-20">
-          <div className="text-xs text-muted-foreground">CPU/Mem</div>
-          <div className="font-medium text-xs">{method.threadUsage}% / {method.memoryUsage}MB</div>
+        ))}
+      </nav>
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Search */}
+      <div className="flex-1 max-w-md">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search methods, workflows, logs..."
+            className="pl-10 bg-background"
+          />
         </div>
       </div>
+
+      {/* Right Actions */}
+      <div className="flex items-center gap-2">
+        {/* Active Node Indicator */}
+        <Badge variant="secondary" className="hidden lg:flex items-center gap-2">
+          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+          Active: enhance_audio
+        </Badge>
+
+        {/* Notifications */}
+        <Button variant="ghost" size="icon" className="relative">
+          <Bell className="w-4 h-4" />
+          <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+            3
+          </Badge>
+        </Button>
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
+
+        {/* Profile */}
+        <Button variant="ghost" size="icon">
+          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+            <span className="text-xs font-medium text-white">ZR</span>
+          </div>
+        </Button>
+      </div>
+    </header>
+  );
+};
+
+// System Metrics Cards using project Card component
+const SystemMetricsCards: React.FC = () => {
+  const metrics = [
+    {
+      title: 'Active Workflows',
+      value: '24',
+      change: '+12.5%',
+      trend: 'up',
+      description: 'Currently running'
+    },
+    {
+      title: 'Completed Today',
+      value: '156',
+      change: '+8.2%',
+      trend: 'up',
+      description: 'Successfully finished'
+    },
+    {
+      title: 'Failure Rate',
+      value: '2.1%',
+      change: '-0.3%',
+      trend: 'down',
+      description: 'Last 24 hours'
+    },
+    {
+      title: 'Avg Response Time',
+      value: '245ms',
+      change: '-15ms',
+      trend: 'down',
+      description: 'Method execution'
+    }
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      {metrics.map((metric, index) => (
+        <Card key={index}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{metric.title}</CardTitle>
+            <Badge variant={metric.trend === 'up' ? 'default' : 'secondary'}>
+              {metric.change}
+            </Badge>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{metric.value}</div>
+            <p className="text-xs text-muted-foreground">{metric.description}</p>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 };
 
-const SystemMetricsCard: React.FC<SystemMetricsCardProps> = ({ 
-  title, 
-  value, 
-  unit, 
-  icon: Icon, 
-  trend, 
-  trendValue 
-}) => {
-  return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground">{title}</p>
-            <p className="text-2xl font-bold">{value}{unit}</p>
-            {trend && (
-              <div className="flex items-center gap-1 mt-1">
-                {trend === 'up' ? (
-                  <TrendingUp className="w-3 h-3 text-green-500" />
-                ) : (
-                  <TrendingDown className="w-3 h-3 text-red-500" />
-                )}
-                <span className="text-xs text-muted-foreground">{trendValue}</span>
-              </div>
-            )}
-          </div>
-          <Icon className="w-8 h-8 text-muted-foreground" />
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+// Workflow Card Component using project Card
+const WorkflowCard: React.FC<{ workflow: WorkflowItem }> = side({ workflow }) => {
+  const getStatusIcon = () => {
+    switch (workflow.status) {
+      case 'running':
+        return <Play className="w-4 h-4 text-blue-500" />;
+      case 'completed':
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'failed':
+        return <XCircle className="w-4 h-4 text-red-500" />;
+      case 'pending':
+        return <Pause className="w-4 h-4 text-yellow-500" />;
+      default:
+        return <AlertCircle className="w-4 h-4 text-gray-500" />;
+    }
+  };
 
-const WorkflowOrchestrationDashboard: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState<string>('overview');
-  const [refreshInterval, setRefreshInterval] = useState<number>(5);
-  const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
+  const getStatusVariant = () => {
+    switch (workflow.status) {
+      case 'running':
+        return 'default';
+      case 'completed':
+        return 'secondary';
+      case 'failed':
+        return 'destructive';
+      case 'pending':
+        return 'outline';
+      default:
+        return 'secondary';
+    }
+  };
 
-  useEffect(() => {
-    if (!autoRefresh) return;
-    
-    const interval = setInterval(() => {
-      // Simulate real-time updates
-      console.log('Refreshing dashboard data...');
-    }, refreshInterval * 1000);
-
-    return () => clearInterval(interval);
-  }, [autoRefresh, refreshInterval]);
-
-  const handleTabChange = (value: string): void => {
-    setSelectedTab(value);
+  const getPriorityColor = () => {
+    switch (workflow.priority) {
+      case 'high':
+        return 'border-l-red-500';
+      case 'medium':
+        return 'border-l-yellow-500';
+      case 'low':
+        return 'border-l-green-500';
+      default:
+        return 'border-l-gray-500';
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-              <Workflow className="w-8 h-8 text-primary" />
-              Flowbee Orchestration Dashboard
-            </h1>
-            <p className="text-muted-foreground">Monitor and manage your workflow execution in real-time</p>
+    <Card className={`border-l-4 ${getPriorityColor()}`}>
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <CardTitle className="text-lg">{workflow.name}</CardTitle>
+              <Badge variant={getStatusVariant()} className="flex items-center gap-1">
+                {getStatusIcon()}
+                {workflow.status}
+              </Badge>
+            </div>
+            <CardDescription>
+              ID: {workflow.id} • Methods: {workflow.methods} • Started: {workflow.startTime}
+              {workflow.duration && ` • Duration: ${workflow.duration}`}
+            </CardDescription>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </Button>
-            <Button size="sm">
-              <PlayCircle className="w-4 h-4 mr-2" />
-              New Workflow
-            </Button>
-          </div>
+          <Button variant="ghost" size="icon">
+            <MoreHorizontal className="w-4 h-4" />
+          </Button>
         </div>
 
-        {/* System Metrics Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <SystemMetricsCard
-            title="CPU Usage"
-            value={mockSystemMetrics.cpuUsage}
-            unit="%"
-            icon={Cpu}
-            trend="up"
-            trendValue="+5.2%"
-          />
-          <SystemMetricsCard
-            title="Memory Usage" 
-            value={mockSystemMetrics.memoryUsage}
-            unit="%"
-            icon={HardDrive}
-            trend="down"
-            trendValue="-2.1%"
-          />
-          <SystemMetricsCard
-            title="Active Threads"
-            value={mockSystemMetrics.activeThreads}
-            unit={`/${mockSystemMetrics.totalThreads}`}
-            icon={Zap}
-          />
-          <SystemMetricsCard
-            title="Completed Today"
-            value={mockSystemMetrics.completedToday}
-            unit=""
-            icon={CheckCircle}
-            trend="up"
-            trendValue="+12"
-          />
-        </div>
-
-        {/* Main Content Tabs */}
-        <Tabs value={selectedTab} onValueChange={handleTabChange} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="workflows">Active Workflows</TabsTrigger>
-            <TabsTrigger value="methods">Method Execution</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
-              {/* Recent Workflows */}
-              <div className="lg:col-span-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Activity className="w-5 h-5" />
-                      Recent Workflows
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ScrollArea className="h-80">
-                      <div className="space-y-3">
-                        {mockWorkflows.map((workflow) => (
-                          <WorkflowCard key={workflow.id} workflow={workflow} />
-                        ))}
-                      </div>
-                    </ScrollArea>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              {/* Quick Stats */}
-              <div className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">System Status</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Running Workflows</span>
-                      <Badge>{mockSystemMetrics.runningWorkflows}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Queued Methods</span>
-                      <Badge variant="outline">{mockSystemMetrics.queuedMethods}</Badge>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Failure Rate</span>
-                      <Badge variant="destructive">{mockSystemMetrics.failureRate}%</Badge>
-                    </div>
-                    
-                    <Separator />
-                    
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-muted-foreground">Thread Utilization</span>
-                        <span className="text-sm font-medium">
-                          {mockSystemMetrics.activeThreads}/{mockSystemMetrics.totalThreads}
-                        </span>
-                      </div>
-                      <Progress value={(mockSystemMetrics.activeThreads / mockSystemMetrics.totalThreads) * 100} />
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Quick Actions</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <Button variant="outline" className="w-full justify-start">
-                      <PlayCircle className="w-4 h-4 mr-2" />
-                      Start New Workflow
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <BarChart3 className="w-4 h-4 mr-2" />
-                      View Analytics
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <Settings className="w-4 h-4 mr-2" />
-                      System Settings
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-              
+        {/* Progress Bar */}
+        {workflow.status === 'running' && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span>Progress</span>
+              <span>{workflow.progress}%</span>
             </div>
-          </TabsContent>
-
-          <TabsContent value="workflows" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Active Workflows</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {mockWorkflows.map((workflow) => (
-                    <WorkflowCard key={workflow.id} workflow={workflow} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="methods" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Method Execution Queue</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {mockMethods.map((method, index) => (
-                    <MethodExecutionRow key={index} method={method} />
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Performance Metrics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-12 text-muted-foreground">
-                    <BarChart3 className="w-12 h-12 mx-auto mb-4" />
-                    <p>Analytics charts would be rendered here</p>
-                    <p className="text-sm">Integration with Chart.js or Recharts</p>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Resource Utilization</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-12 text-muted-foreground">
-                    <TrendingUp className="w-12 h-12 mx-auto mb-4" />
-                    <p>Resource utilization graphs</p>
-                    <p className="text-sm">Real-time CPU, Memory, Thread usage</p>
-                  </div>
-                </CardContent>
-              </Card>
+            <div className="w-full bg-secondary rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${workflow.progress}%` }}
+              />
             </div>
-          </TabsContent>
-        </Tabs>
-
-        {/* Auto-refresh indicator */}
-        {autoRefresh && (
-          <div className="fixed bottom-4 right-4">
-            <Badge variant="outline" className="bg-background">
-              <Activity className="w-3 h-3 mr-1 animate-pulse" />
-              Auto-refreshing every {refreshInterval}s
-            </Badge>
           </div>
         )}
-        
+      </CardHeader>
+
+      <CardFooter className="flex gap-2">
+        <Button variant="link" size="sm" className="p-0 h-auto text-blue-600">
+          View Details
+        </Button>
+        <Button variant="link" size="sm" className="p-0 h-auto text-muted-foreground">
+          View Logs
+        </Button>
+        {workflow.status === 'running' && (
+          <Button variant="link" size="sm" className="p-0 h-auto text-red-600">
+            Stop
+          </Button>
+        )}
+      </CardFooter>
+    </Card>
+  );
+};
+
+// Workflow List Component using project Tabs
+const WorkflowList: React.FC<{ workflows: WorkflowItem[] }> = ({ workflows }) => {
+  const [filter, setFilter] = useState('all');
+
+  const filteredWorkflows = workflows.filter(workflow => {
+    if (filter === 'all') return true;
+    return workflow.status === filter;
+  });
+
+  const statusCounts = workflows.reduce((acc, workflow) => {
+    acc[workflow.status] = (acc[workflow.status] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Workflows</h2>
+        <Button>Create Workflow</Button>
       </div>
+
+      <Tabs value={filter} onValueChange={setFilter}>
+        <TabsList>
+          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="running">
+            Running {statusCounts.running && <Badge className="ml-2">{statusCounts.running}</Badge>}
+          </TabsTrigger>
+          <TabsTrigger value="completed">
+            Completed {statusCounts.completed && <Badge className="ml-2">{statusCounts.completed}</Badge>}
+          </TabsTrigger>
+          <TabsTrigger value="failed">
+            Failed {statusCounts.failed && <Badge className="ml-2">{statusCounts.failed}</Badge>}
+          </TabsTrigger>
+          <TabsTrigger value="pending">
+            Pending {statusCounts.pending && <Badge className="ml-2">{statusCounts.pending}</Badge>}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value={filter} className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {filteredWorkflows.map((workflow) => (
+              <WorkflowCard key={workflow.id} workflow={workflow} />
+            ))}
+          </div>
+
+          {filteredWorkflows.length === 0 && (
+            <div className="text-center py-12">
+              <Workflow className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">No workflows found</h3>
+              <p className="text-muted-foreground">
+                {filter === 'all' ? 'No workflows have been created yet.' : `No ${filter} workflows found.`}
+              </p>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
 
-export default WorkflowOrchestrationDashboard;
+// Main Dashboard Component
+const WorkflowOrchestrationDashboard: React.FC = () => {
+  const systemMetrics: SystemMetrics = {
+    threads: { current: 12, max: 16 },
+    memory: 42,
+    cpu: 67,
+    refreshRate: 5
+  };
+
+  const mockWorkflows: WorkflowItem[] = [
+    {
+      id: 'wf-001',
+      name: 'Audio Enhancement Pipeline',
+      status: 'running',
+      progress: 75,
+      startTime: '2024-06-12 10:30:00',
+      methods: 8,
+      priority: 'high'
+    },
+    {
+      id: 'wf-002',
+      name: 'Video Processing Workflow',
+      status: 'completed',
+      progress: 100,
+      startTime: '2024-06-12 09:15:00',
+      duration: '45m 23s',
+      methods: 12,
+      priority: 'medium'
+    },
+    {
+      id: 'wf-003',
+      name: 'Data Analytics Pipeline',
+      status: 'failed',
+      progress: 35,
+      startTime: '2024-06-12 11:00:00',
+      duration: '12m 45s',
+      methods: 6,
+      priority: 'low'
+    },
+    {
+      id: 'wf-004',
+      name: 'Image Classification Batch',
+      status: 'pending',
+      progress: 0,
+      startTime: '2024-06-12 11:30:00',
+      methods: 15,
+      priority: 'high'
+    },
+    {
+      id: 'wf-005',
+      name: 'Text Processing Pipeline',
+      status: 'running',
+      progress: 45,
+      startTime: '2024-06-12 10:45:00',
+      methods: 9,
+      priority: 'medium'
+    },
+    {
+      id: 'wf-006',
+      name: 'ML Model Training',
+      status: 'completed',
+      progress: 100,
+      startTime: '2024-06-12 08:00:00',
+      duration: '2h 15m',
+      methods: 20,
+      priority: 'high'
+    }
+  ];
+
+  return (
+    <SidebarProvider>
+      <div className="flex h-screen w-full bg-background">
+        <AppSidebar systemMetrics={systemMetrics} />
+        <SidebarInset className="flex flex-col bg-background">
+          <TopNavbar />
+          <main className="flex-1 overflow-auto p-6 bg-background">
+            <SystemMetricsCards />
+            <WorkflowList workflows={mockWorkflows} />
+          </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
+  );
+};
+
+export default function App() {
+  return (
+      <WorkflowOrchestrationDashboard />
+  );
+}

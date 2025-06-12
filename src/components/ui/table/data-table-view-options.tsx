@@ -3,7 +3,7 @@
 import type { Table } from '@tanstack/react-table';
 import { Settings2 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@ui/button';
 import {
   Command,
   CommandEmpty,
@@ -11,12 +11,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList
-} from '@/components/ui/command';
+} from '@ui/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
-} from '@/components/ui/popover';
+} from '@ui/popover';
 import { cn } from '@lib/utils';
 import * as React from 'react';
 import { CheckIcon, CaretSortIcon } from '@radix-ui/react-icons';
