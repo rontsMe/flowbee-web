@@ -376,7 +376,7 @@ const SystemMetricsCards: React.FC = () => {
 };
 
 // Workflow Card Component using project Card
-const WorkflowCard: React.FC<{ workflow: WorkflowItem }> = side({ workflow }) => {
+const WorkflowCard: React.FC<{ workflow: WorkflowItem }> = ({ workflow }) => {
   const getStatusIcon = () => {
     switch (workflow.status) {
       case 'running':
