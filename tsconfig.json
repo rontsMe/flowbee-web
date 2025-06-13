@@ -32,6 +32,7 @@
       "@icons": ["components/icons.tsx"],
       "@styles/*": ["styles/*"],
       "@constants/*": ["constants/*"],
+      "@themeTypes": ["types/ThemeTypes.ts"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

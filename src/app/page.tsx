@@ -1,45 +1,47 @@
 // app/page.tsx
+
 'use client';
+
 import React, { useState, useEffect } from 'react';
 
-// Import existing metrics components
+// ✅ NEW - Import from updated metrics system
 import { 
-  SystemMetricCard,
+  SystemMetricCard,  // Layout container
+  MetricCard,        // Individual metric cards
   ChartDataPoint,
-  SystemMetricId,
-  ChartType,
   generateMockData,
   getDataPointsCount,
-  DEFAULT_SYSTEM_METRICS,
   CHART_UPDATE_INTERVAL
-} from '@components/features/metrics';
+} from '@features/metrics';
 
 // Import UI components
 import { Badge } from '@ui/badge';
+import { cn } from '@lib/utils';
 import PageContainer from '@layout/PageContainer';
 
 /**
- * Enhanced Dashboard Page
+ * Refactored Dashboard Page - New Architecture
  * 
- * Purpose: Main dashboard utilizing existing metrics components and globals.css theming
- * Features: System Overview and Processing Overview sections matching the design
+ * Purpose: Dashboard using new generic architecture
+ * Features: SystemMetricCard as layout + MetricCard as individual cards
+ * Parent controls: All domain logic, colors, chart types, data
  * 
- * Methods:
- * - updateSystemData(): Update real-time system metrics data
- * - updateProcessingData(): Update real-time processing metrics data  
- * - render(): Return dashboard layout using existing metric components
+ * Architecture:
+ * - SystemMetricCard = responsive layout container with title
+ * - MetricCard = individual card with chart factory
+ * - Parent = domain knowledge, color mapping, data management
  */
 export default function DashboardPage() {
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
   const [timeRanges, setTimeRanges] = useState<Record<string, string>>({
     'cpu': '30m',
     'memory': '30m', 
     'gpu': '30m',
     'disk': '30m',
-    'executions-per-minute': '30m',
-    'method-duration': '30m',
-    'queue-size': '30m',
-    'concurrency-level': '30m'
+    'executions': '30m',
+    'duration': '30m',
+    'queue': '30m',
+    'concurrency': '30m'
   });
 
   // System metrics data state
@@ -52,10 +54,10 @@ export default function DashboardPage() {
 
   // Processing metrics data state  
   const [processingData, setProcessingData] = useState({
-    'executions-per-minute': [] as ChartDataPoint[],
-    'method-duration': [] as ChartDataPoint[],
-    'queue-size': [] as ChartDataPoint[],
-    'concurrency-level': [] as ChartDataPoint[]
+    'executions': [] as ChartDataPoint[],
+    'duration': [] as ChartDataPoint[],
+    'queue': [] as ChartDataPoint[],
+    'concurrency': [] as ChartDataPoint[]
   });
 
   // Processing stats
@@ -65,50 +67,43 @@ export default function DashboardPage() {
     failureCount: 10
   });
 
-  // Color mapping objects
-  const colorsAvailable = {
-    "coral/red": "oklch(0.72 0.16 20)",
-    "blue": "oklch(0.65 0.19 240)", 
-    "teal/green": "oklch(0.75 0.15 160)",
-    "gold/yellow": "oklch(0.80 0.17 80)",
-    "purple": "oklch(0.70 0.18 280)"
-  };
-
-  const cardColors = {
-    // System Overview colors
-    'cpu': colorsAvailable["coral/red"],
-    'memory': colorsAvailable["blue"],
-    'gpu': colorsAvailable["teal/green"],
-    'disk': colorsAvailable["gold/yellow"],
+  // ✅ PARENT CONTROLS - Domain-specific color mapping
+  const chartColors = {
+    // System metrics - using CSS custom properties from globals.css
+    'cpu': 'var(--chart-5)',       // Coral for CPU
+    'memory': 'var(--chart-4)',    // Blue for Memory
+    'gpu': 'var(--chart-2)',       // Teal for GPU
+    'disk': 'var(--chart-3)',      // Gold for Disk
     
-    // Processing Overview colors
-    'executions-per-minute': colorsAvailable["blue"],
-    'method-duration': colorsAvailable["purple"],
-    'queue-size': colorsAvailable["gold/yellow"],
-    'concurrency-level': colorsAvailable["teal/green"]
+    // Processing metrics
+    'executions': 'var(--chart-4)', // Blue for throughput
+    'duration': 'var(--chart-1)',   // Purple for timing
+    'queue': 'var(--chart-3)',      // Gold for queue
+    'concurrency': 'var(--chart-2)' // Teal for concurrency
   };
 
-  // CSS-in-JS styles using Tailwind utilities and globals.css theming
+  // ✅ PARENT CONTROLS - Domain-specific opacity mapping
+  const chartOpacity = {
+    'cpu': 70,
+    'memory': 50,
+    'gpu': 65,
+    'disk': 45,
+    'executions': 85,
+    'duration': 70,
+    'queue': 50,
+    'concurrency': 75
+  };
+
+  // CSS-in-JS styles using semantic Tailwind classes
   const styles = {
     container: "space-y-8 p-6",
     
-    sectionHeader: "flex items-center justify-between mb-6",
-    sectionTitle: "text-2xl font-bold text-foreground",
-    
-    systemSection: "space-y-6",
-    processingSection: "space-y-6",
-    
-    metricsGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6",
-    expandedGrid: "w-full",
-    
-    successBadge: `
-      flex items-center gap-2 px-3 py-1.5
-      bg-secondary/50 text-foreground
-      border border-border/20
-      rounded-full
-      backdrop-blur-sm
-      shadow-sm
-    `,
+    successBadge: cn(
+      "flex items-center gap-2 px-3 py-1.5",
+      "bg-secondary/50 text-foreground",        // Semantic classes
+      "border border-border/20",                // Themed by globals.css
+      "rounded-full backdrop-blur-sm shadow-sm"
+    ),
     
     successDot: "w-2 h-2 bg-green-500 rounded-full animate-pulse",
     successText: "text-sm font-medium"
@@ -116,7 +111,6 @@ export default function DashboardPage() {
 
   /**
    * updateSystemData - Update system metrics with realistic fluctuations
-   * Purpose: Maintain real-time system monitoring data
    */
   const updateSystemData = () => {
     const timestamp = Date.now();
@@ -142,27 +136,26 @@ export default function DashboardPage() {
   };
 
   /**
-   * updateProcessingData - Update processing metrics with realistic fluctuations  
-   * Purpose: Maintain real-time processing performance data
+   * updateProcessingData - Update processing metrics
    */
   const updateProcessingData = () => {
     const timestamp = Date.now();
     
     setProcessingData(prev => ({
-      'executions-per-minute': [
-        ...prev['executions-per-minute'].slice(-(getDataPointsCount(timeRanges['executions-per-minute']) - 1)),
+      'executions': [
+        ...prev['executions'].slice(-(getDataPointsCount(timeRanges['executions']) - 1)),
         { timestamp, value: Math.max(0, 796 + (Math.random() - 0.5) * 100) }
       ],
-      'method-duration': [
-        ...prev['method-duration'].slice(-(getDataPointsCount(timeRanges['method-duration']) - 1)),
+      'duration': [
+        ...prev['duration'].slice(-(getDataPointsCount(timeRanges['duration']) - 1)),
         { timestamp, value: Math.max(0, 263 + (Math.random() - 0.5) * 50) }
       ],
-      'queue-size': [
-        ...prev['queue-size'].slice(-(getDataPointsCount(timeRanges['queue-size']) - 1)),
+      'queue': [
+        ...prev['queue'].slice(-(getDataPointsCount(timeRanges['queue']) - 1)),
         { timestamp, value: Math.max(0, 21 + (Math.random() - 0.5) * 10) }
       ],
-      'concurrency-level': [
-        ...prev['concurrency-level'].slice(-(getDataPointsCount(timeRanges['concurrency-level']) - 1)),
+      'concurrency': [
+        ...prev['concurrency'].slice(-(getDataPointsCount(timeRanges['concurrency']) - 1)),
         { timestamp, value: Math.max(0, 6 + (Math.random() - 0.5) * 3) }
       ]
     }));
@@ -177,32 +170,21 @@ export default function DashboardPage() {
     }
   };
 
-  // Initialize and update data
+  // Initialize data
   useEffect(() => {
-    // Generate initial system data
-    const generateInitialSystemData = (id: string, baseValue: number, variance: number) => {
-      const count = getDataPointsCount(timeRanges[id]);
-      return generateMockData(baseValue, variance, count);
-    };
-
-    // Generate initial processing data
-    const generateInitialProcessingData = (id: string, baseValue: number, variance: number) => {
-      const count = getDataPointsCount(timeRanges[id]);
-      return generateMockData(baseValue, variance, count);
-    };
-
+    // Generate initial data
     setSystemData({
-      'cpu': generateInitialSystemData('cpu', 59, 20),
-      'memory': generateInitialSystemData('memory', 41, 15),
-      'gpu': generateInitialSystemData('gpu', 14, 12),
-      'disk': generateInitialSystemData('disk', 73, 8)
+      'cpu': generateMockData(59, 20, getDataPointsCount(timeRanges['cpu'])),
+      'memory': generateMockData(41, 15, getDataPointsCount(timeRanges['memory'])),
+      'gpu': generateMockData(14, 12, getDataPointsCount(timeRanges['gpu'])),
+      'disk': generateMockData(73, 8, getDataPointsCount(timeRanges['disk']))
     });
 
     setProcessingData({
-      'executions-per-minute': generateInitialProcessingData('executions-per-minute', 796, 100),
-      'method-duration': generateInitialProcessingData('method-duration', 263, 50),
-      'queue-size': generateInitialProcessingData('queue-size', 21, 10),
-      'concurrency-level': generateInitialProcessingData('concurrency-level', 6, 3)
+      'executions': generateMockData(796, 100, getDataPointsCount(timeRanges['executions'])),
+      'duration': generateMockData(263, 50, getDataPointsCount(timeRanges['duration'])),
+      'queue': generateMockData(21, 10, getDataPointsCount(timeRanges['queue'])),
+      'concurrency': generateMockData(6, 3, getDataPointsCount(timeRanges['concurrency']))
     });
 
     const systemInterval = setInterval(updateSystemData, CHART_UPDATE_INTERVAL);
@@ -215,184 +197,201 @@ export default function DashboardPage() {
   }, [timeRanges]);
 
   const handleCardToggle = (cardId: string) => {
-    setExpandedCard(expandedCard === cardId ? null : cardId);
+    setExpandedCards(prev => ({ ...prev, [cardId]: !prev[cardId] }));
   };
 
   const handleTimeRangeChange = (cardId: string, range: string) => {
     setTimeRanges(prev => ({ ...prev, [cardId]: range }));
   };
 
-  // System metrics configuration matching the design
-  const systemMetrics = [
-    {
-      id: 'cpu' as SystemMetricId,
-      label: 'CPU',
-      spec: 'AMD 4-core processor',
-      value: systemData['cpu'][systemData['cpu'].length - 1]?.value?.toFixed(0) || '59',
-      unit: '%',
-      chartType: 'line' as ChartType,
-      data: systemData['cpu'],
-      timeRange: timeRanges['cpu']
-    },
-    {
-      id: 'memory' as SystemMetricId,
-      label: 'Memory', 
-      spec: '32 GB RAM',
-      value: systemData['memory'][systemData['memory'].length - 1]?.value?.toFixed(0) || '41',
-      unit: '%',
-      chartType: 'area' as ChartType,
-      data: systemData['memory'],
-      timeRange: timeRanges['memory']
-    },
-    {
-      id: 'gpu' as SystemMetricId,
-      label: 'GPU',
-      spec: 'NVIDIA GPU', 
-      value: systemData['gpu'][systemData['gpu'].length - 1]?.value?.toFixed(0) || '14',
-      unit: '%',
-      chartType: 'line' as ChartType,
-      data: systemData['gpu'],
-      timeRange: timeRanges['gpu']
-    },
-    {
-      id: 'disk' as SystemMetricId,
-      label: 'Disk',
-      spec: '1TB NVMe SSD',
-      value: systemData['disk'][systemData['disk'].length - 1]?.value?.toFixed(0) || '73', 
-      unit: '%',
-      chartType: 'area' as ChartType,
-      data: systemData['disk'],
-      timeRange: timeRanges['disk']
-    }
-  ];
-
-  // Processing metrics configuration matching the design
-  const performanceMetrics = [
-    {
-      id: 'executions-per-minute',
-      label: 'Executions per Minute',
-      value: processingData['executions-per-minute'][processingData['executions-per-minute'].length - 1]?.value?.toFixed(0) || '796',
-      unit: '',
-      chartType: 'bar' as ChartType,
-      data: processingData['executions-per-minute'],
-      timeRange: timeRanges['executions-per-minute']
-    },
-    {
-      id: 'method-duration', 
-      label: 'Average Method Duration',
-      value: processingData['method-duration'][processingData['method-duration'].length - 1]?.value?.toFixed(0) || '263',
-      unit: 'ms',
-      chartType: 'area' as ChartType,
-      data: processingData['method-duration'],
-      timeRange: timeRanges['method-duration']
-    },
-    {
-      id: 'queue-size',
-      label: 'Queue Size', 
-      value: processingData['queue-size'][processingData['queue-size'].length - 1]?.value?.toFixed(0) || '21',
-      unit: '',
-      chartType: 'area' as ChartType,
-      data: processingData['queue-size'],
-      timeRange: timeRanges['queue-size']
-    },
-    {
-      id: 'concurrency-level',
-      label: 'Concurrency Level',
-      value: processingData['concurrency-level'][processingData['concurrency-level'].length - 1]?.value?.toFixed(0) || '6',
-      unit: '',
-      chartType: 'line' as ChartType, 
-      data: processingData['concurrency-level'],
-      timeRange: timeRanges['concurrency-level']
-    }
-  ];
+  // Get latest values for display
+  const getLatestValue = (data: ChartDataPoint[], defaultValue: string) => {
+    return data.length > 0 ? data[data.length - 1].value.toFixed(0) : defaultValue;
+  };
 
   return (
     <PageContainer>
       <div className={styles.container}>
         
-        {/* System Overview Section */}
-        <div className={styles.systemSection}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>System Overview</h2>
-          </div>
-
-          {/* System Metrics Grid */}
-          {expandedCard && systemMetrics.find(m => m.id === expandedCard) ? (
-            <div className={styles.expandedGrid}>
-              {systemMetrics.find(m => m.id === expandedCard) && (
-                <SystemMetricCard
-                  {...systemMetrics.find(m => m.id === expandedCard)!}
-                  color={cardColors[expandedCard as keyof typeof cardColors]} 
-                  isExpanded={true}
-                  onToggleExpand={() => handleCardToggle(expandedCard)}
-                  timeRange={systemMetrics.find(m => m.id === expandedCard)!.timeRange}
-                  onTimeRangeChange={(range) => handleTimeRangeChange(expandedCard, range)}
-                />
-              )}
-            </div>
-          ) : (
-            <div className={styles.metricsGrid}>
-              {systemMetrics.map(metric => (
-                <SystemMetricCard
-                  key={metric.id}
-                  {...metric}
-                  color={cardColors[metric.id]} // ✅ Pass explicit color
-                  isExpanded={false}
-                  onToggleExpand={() => handleCardToggle(metric.id)}
-                  timeRange={metric.timeRange}
-                  onTimeRangeChange={(range) => handleTimeRangeChange(metric.id, range)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Processing Overview Section */}
-        <div className={styles.processingSection}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Processing Overview</h2>
+        {/* ✅ NEW ARCHITECTURE - System Overview Section */}
+        <SystemMetricCard 
+          title="System Overview"
+          columns={{ default: 1, md: 2, lg: 2, xl: 4 }}
+        >
+          {/* CPU Metric Card */}
+          <MetricCard
+            title="CPU Usage"
+            value={getLatestValue(systemData.cpu, '59')}
+            unit="%"
+            spec="AMD 4-core processor"
+            isExpanded={expandedCards.cpu || false}
+            onToggleExpand={() => handleCardToggle('cpu')}
+            timeRange={timeRanges.cpu}
+            onTimeRangeChange={(range) => handleTimeRangeChange('cpu', range)}
             
-            {/* Success/Failure Rate Badge */}
-            <Badge variant="secondary" className={styles.successBadge}>
-              <div className={styles.successDot}></div>
-              <span className={styles.successText}>
-                Success/failure {processingStats.successRate.toFixed(1)}% {processingStats.successCount}/{processingStats.failureCount}
-              </span>
-            </Badge>
-          </div>
+            // ✅ Parent controls chart configuration
+            chartType="line"
+            data={systemData.cpu}
+            color={chartColors.cpu}
+            opacity={chartOpacity.cpu}
+            showGrid={true}
+            showYAxis={true}
+            showXAxis={true}
+          />
 
-          {/* Processing Metrics Grid */}
-          {expandedCard && performanceMetrics.find(m => m.id === expandedCard) ? (
-            <div className={styles.expandedGrid}>
-              {performanceMetrics.find(m => m.id === expandedCard) && (
-                <SystemMetricCard
-                  {...performanceMetrics.find(m => m.id === expandedCard)!}
-                  id={performanceMetrics.find(m => m.id === expandedCard)!.id as SystemMetricId}
-                  color={cardColors[expandedCard]} // ✅ Pass explicit color
-                  isExpanded={true}
-                  onToggleExpand={() => handleCardToggle(expandedCard)}
-                  timeRange={performanceMetrics.find(m => m.id === expandedCard)!.timeRange}
-                  onTimeRangeChange={(range) => handleTimeRangeChange(expandedCard, range)}
-                />
-              )}
-            </div>
-          ) : (
-            <div className={styles.metricsGrid}>
-              {performanceMetrics.map(metric => (
-                <SystemMetricCard
-                  key={metric.id}
-                  {...metric}
-                  id={metric.id as SystemMetricId}
-                  color={cardColors[metric.id]} // ✅ Pass explicit color
-                  isExpanded={false}
-                  onToggleExpand={() => handleCardToggle(metric.id)}
-                  timeRange={metric.timeRange}
-                  onTimeRangeChange={(range) => handleTimeRangeChange(metric.id, range)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+          {/* Memory Metric Card */}
+          <MetricCard
+            title="Memory Usage"
+            value={getLatestValue(systemData.memory, '41')}
+            unit="%"
+            spec="32 GB RAM"
+            isExpanded={expandedCards.memory || false}
+            onToggleExpand={() => handleCardToggle('memory')}
+            timeRange={timeRanges.memory}
+            onTimeRangeChange={(range) => handleTimeRangeChange('memory', range)}
+            
+            chartType="area"
+            data={systemData.memory}
+            color={chartColors.memory}
+            opacity={chartOpacity.memory}
+            showGrid={true}                    // No grid for area chart
+            showYAxis={true}
+            showXAxis={false}                   // No X-axis for memory
+          />
+
+          {/* GPU Metric Card */}
+          <MetricCard
+            title="GPU Usage"
+            value={getLatestValue(systemData.gpu, '14')}
+            unit="%"
+            spec="NVIDIA GPU"
+            isExpanded={expandedCards.gpu || false}
+            onToggleExpand={() => handleCardToggle('gpu')}
+            timeRange={timeRanges.gpu}
+            onTimeRangeChange={(range) => handleTimeRangeChange('gpu', range)}
+            
+            chartType="line"
+            data={systemData.gpu}
+            color={chartColors.gpu}
+            opacity={chartOpacity.gpu}
+            showGrid={true}
+            showYAxis={true}
+            showXAxis={true}
+          />
+
+          {/* Disk Metric Card */}
+          <MetricCard
+            title="Disk Usage"
+            value={getLatestValue(systemData.disk, '73')}
+            unit="%"
+            spec="1TB NVMe SSD"
+            isExpanded={expandedCards.disk || false}
+            onToggleExpand={() => handleCardToggle('disk')}
+            timeRange={timeRanges.disk}
+            onTimeRangeChange={(range) => handleTimeRangeChange('disk', range)}
+            
+            chartType="area"
+            data={systemData.disk}
+            color={chartColors.disk}
+            opacity={chartOpacity.disk}
+            showGrid={true}
+            showYAxis={true}
+            showXAxis={true}
+          />
+        </SystemMetricCard>
+
+        {/* ✅ NEW ARCHITECTURE - Processing Overview Section */}
+        {/* TODO: Success badge can be added to SystemMetricCard header or as separate element */}
+        {/* 
+        <Badge variant="secondary" className={styles.successBadge}>
+          <div className={styles.successDot}></div>
+          <span className={styles.successText}>
+            Success/failure {processingStats.successRate.toFixed(1)}% {processingStats.successCount}/{processingStats.failureCount}
+          </span>
+        </Badge>
+        */}
+        
+        <SystemMetricCard 
+          title="Processing Overview"
+          columns={{ default: 1, md: 2, lg: 2, xl: 4 }}
+        >
+
+          {/* Executions per Minute */}
+          <MetricCard
+            title="Executions per Minute"
+            value={getLatestValue(processingData.executions, '796')}
+            unit="/min"
+            isExpanded={expandedCards.executions || false}
+            onToggleExpand={() => handleCardToggle('executions')}
+            timeRange={timeRanges.executions}
+            onTimeRangeChange={(range) => handleTimeRangeChange('executions', range)}
+            
+            chartType="bar"
+            data={processingData.executions}
+            color={chartColors.executions}
+            opacity={chartOpacity.executions}
+            showGrid={true}
+            showYAxis={true}
+            showXAxis={true}
+          />
+
+          {/* Average Method Duration */}
+          <MetricCard
+            title="Average Method Duration"
+            value={getLatestValue(processingData.duration, '263')}
+            unit="ms"
+            isExpanded={expandedCards.duration || false}
+            onToggleExpand={() => handleCardToggle('duration')}
+            timeRange={timeRanges.duration}
+            onTimeRangeChange={(range) => handleTimeRangeChange('duration', range)}
+            
+            chartType="area"
+            data={processingData.duration}
+            color={chartColors.duration}
+            opacity={chartOpacity.duration}
+            showGrid={true}
+            showYAxis={true}
+            showXAxis={true}
+          />
+
+          {/* Queue Size */}
+          <MetricCard
+            title="Queue Size"
+            value={getLatestValue(processingData.queue, '21')}
+            unit=" items"
+            isExpanded={expandedCards.queue || false}
+            onToggleExpand={() => handleCardToggle('queue')}
+            timeRange={timeRanges.queue}
+            onTimeRangeChange={(range) => handleTimeRangeChange('queue', range)}
+            
+            chartType="area"
+            data={processingData.queue}
+            color={chartColors.queue}
+            opacity={chartOpacity.queue}
+            showGrid={true}
+            showYAxis={true}
+            showXAxis={true}
+          />
+
+          {/* Concurrency Level */}
+          <MetricCard
+            title="Concurrency Level"
+            value={getLatestValue(processingData.concurrency, '6')}
+            unit=""
+            isExpanded={expandedCards.concurrency || false}
+            onToggleExpand={() => handleCardToggle('concurrency')}
+            timeRange={timeRanges.concurrency}
+            onTimeRangeChange={(range) => handleTimeRangeChange('concurrency', range)}
+            
+            chartType="line"
+            data={processingData.concurrency}
+            color={chartColors.concurrency}
+            opacity={chartOpacity.concurrency}
+            showGrid={true}
+            showYAxis={true}
+            showXAxis={true}
+          />
+        </SystemMetricCard>
 
       </div>
     </PageContainer>

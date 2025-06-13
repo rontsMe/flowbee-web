@@ -1,15 +1,19 @@
-// app/layout.tsx
+// src/app/layout.tsx
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// Layout and Navigation Components
+// Theme imports
 import ThemeProvider from "@layout/ThemeProvider";
-import { SidebarProvider, SidebarInset } from "@ui/sidebar";
-import { AppSidebar, Header } from "@compound/nav";
+import { ThemeConfig, HydrationConfig } from '@themeTypes';
 
-// KBar Command Palette
-import KBar from "@components/kbar";
+// Navigation imports
+import { AppSidebar, Header } from '@compound/nav';
+import { SidebarProvider, SidebarInset } from '@ui/sidebar';
+
+// KBar import
+import KBar from '@components/kbar';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,42 +26,79 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Flowbee Dashboard",
-  description: "Workflow orchestration dashboard",
+  title: "Workflow Dashboard",
+  description: "Real-time workflow monitoring and system metrics",
 };
 
+/**
+ * RootLayout Component with Navigation Integration + KBar
+ * Purpose: Main layout with hydration-safe theme handling + navigation structure + search (SRP)
+ * Features: Sidebar navigation, header, theme provider, hydration safety, KBar search
+ * Follows: SOLID - Single responsibility for layout structure
+ * 
+ * @param children React.ReactNode - Page components to render
+ * @returns JSX.Element - Root layout with navigation, theme safety, and search
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>): React.ReactElement {
+  
+  // Theme configuration - centralized and typed
+  const themeConfig: ThemeConfig = {
+    attribute: "class",
+    defaultTheme: "dark",
+    enableSystem: false,
+    storageKey: "theme",
+    themes: ["light", "dark"]
+  };
+
+  // Hydration configuration - prevents SSR/client mismatches
+  const hydrationConfig: HydrationConfig = {
+    suppressHydrationWarning: true,
+    defaultThemeClass: "dark",
+    browserExtensionSuppress: true
+  };
+
   return (
-    <html lang="en">
+    <html 
+      lang="en" 
+      className={themeConfig.defaultTheme === 'dark' ? 'dark' : ''}
+      suppressHydrationWarning={hydrationConfig.suppressHydrationWarning}
+      style={{
+        colorScheme: themeConfig.defaultTheme === 'dark' ? 'dark' : 'light'
+      }}
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning={hydrationConfig.browserExtensionSuppress}
+        data-theme-safe="true"
       >
         <ThemeProvider
-          attribute="class" 
-          defaultTheme="dark" 
-          enableSystem={true}
+          attribute={themeConfig.attribute}
+          defaultTheme={themeConfig.defaultTheme}
+          enableSystem={themeConfig.enableSystem}
         >
+          {/* ✅ KBar Provider - Wraps everything for search functionality */}
           <KBar>
+            {/* Navigation Layout Structure */}
             <SidebarProvider>
-              <div className="flex h-screen w-full">
-                {/* Persistent Sidebar */}
-                <AppSidebar />
+              {/* App Sidebar - Navigation Menu */}
+              <AppSidebar />
+              
+              {/* Main Content Area */}
+              <SidebarInset>
+                {/* Header - Breadcrumbs, Search, User Menu, Theme Toggle */}
+                <Header />
                 
-                {/* Main Content Area */}
-                <SidebarInset className="flex flex-col bg-background">
-                  {/* Persistent Header */}
-                  <Header />
-                  
-                  {/* Page Content */}
-                  <main className="flex-1 overflow-auto">
+                {/* Page Content */}
+                <main className="flex-1 overflow-hidden">
+                  <div className="h-full overflow-auto">
                     {children}
-                  </main>
-                </SidebarInset>
-              </div>
+                  </div>
+                </main>
+              </SidebarInset>
             </SidebarProvider>
           </KBar>
         </ThemeProvider>

@@ -1,51 +1,57 @@
 // src/components/metrics/index.ts
 
+/**
+ * Metrics Components Index
+ * Purpose: Clean exports for metrics components integrated with generic charts
+ * Updated: Now uses generic chart system from @/components/charts
+ */
+
 // ============================================
 // COMPONENT EXPORTS
 // ============================================
 
-// Base components
+// Layout components
 export { default as MetricCard } from './MetricCard';
+export { default as SystemMetricCard } from './SystemMetricCard';
 export { default as TimeRangeSelector } from './TimeRangeSelector';
 export { default as Tooltip } from './Tooltip';
 
-// Chart components
-export { default as LineChart } from './charts/LineChart';
-export { default as BarChart } from './charts/BarChart';
-export { default as AreaChart } from './charts/AreaChart';
-
-// Metric card variants
-export { default as SystemMetricCard } from './SystemMetricCard';
+// Re-export generic charts for convenience
+export { 
+  LineChart, 
+  AreaChart, 
+  BarChart,
+  ChartGrid,
+  CHART_COMPONENTS,
+  useChartData,
+  useChartBounds
+} from './charts';
 
 // ============================================
 // TYPE EXPORTS
 // ============================================
 
+// Re-export chart types
 export type {
-  // Core interfaces
   ChartDataPoint,
   TooltipData,
+  ChartType,
+  ChartProps,
+  ChartBounds,
+  ChartCalculations
+} from './charts';
+
+// Metrics-specific types
+export type {
   TimeRange,
   PerformanceStats,
-  
-  // Component props
-  MetricCardProps,
-  SystemMetricCardProps,
-  PerformanceMetricCardProps,
-  ChartProps,
   TimeRangeSelectorProps,
   TooltipProps,
   SystemOverviewContainerProps,
   PerformanceOverviewContainerProps,
-  
-  // Type unions
-  ChartType,
   MetricType,
   SystemMetricId,
-  PerformanceMetricId,
-  
-  // Chart mapping
-  ChartComponentMap
+  PerformanceMetricId
 } from './types';
 
 // ============================================
@@ -59,7 +65,6 @@ export {
   SYSTEM_CHART_COLORS,
   PERFORMANCE_CHART_COLORS,
   DEFAULT_TIME_RANGE,
-  DEFAULT_CHART_TYPE,
   CHART_UPDATE_INTERVAL,
   PERFORMANCE_UPDATE_INTERVAL,
   DEFAULT_SYSTEM_METRICS,
@@ -68,13 +73,19 @@ export {
   // Utility functions
   getChartColor,
   getDataPointsCount,
-  formatTooltipTime,
-  formatValue,
-  generateGradientId,
   generateMockData,
   
   // Type guards
   isSystemMetric,
-  isPerformanceMetric,
-  isValidChartType
+  isPerformanceMetric
 } from './types';
+
+// Re-export chart utilities
+export {
+  formatTooltipTime,
+  formatValue,
+  generateGradientId,
+  isValidChartType,
+  isValidOpacity,
+  isValidChartData
+} from './charts';

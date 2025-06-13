@@ -1,70 +1,100 @@
-// src/components/metrics/charts/AreaChart.tsx
-import React, { useRef } from 'react';
-import { ChartProps, TooltipData, generateGradientId } from '../types';
+// src/components/charts/AreaChart.tsx
+
+import React, { useRef, useMemo } from 'react';
+import { ChartProps, ChartOpacityManager, DEFAULT_SHOW_GRID, DEFAULT_SHOW_Y_AXIS, DEFAULT_SHOW_X_AXIS } from './types';
+import { useChartData, useTooltipPosition, useResolvedColor } from './chartHooks';
+import { generateGradientId, pointsToSVGString, createAreaPolygonPoints } from './chartUtils';
 import ChartGrid from './ChartGrid';
 
 /**
- * AreaChart Component
- * 
- * Purpose: Render area chart with gradient fill utilizing ChartGrid for DRY grid system
- * Features: Tooltip interaction, gradient fill, white dotted grid lines
- * 
- * Methods:
- * - handleMouseMove(): Handle tooltip positioning and data extraction
- * - render(): Return SVG area chart with DRY grid component
+ * AreaChart Component - Generic Area Chart with Color Resolution
+ * Purpose: Render area chart with gradient fill - completely domain agnostic (SRP)
+ * Features: CSS custom property resolution, configurable opacity, grid/axis, tooltip interaction
+ * Follows: SOLID - Uses composition of hooks and utilities
  */
 const AreaChart: React.FC<ChartProps> = ({ 
   data, 
-  isExpanded, 
-  color = 'hsl(var(--primary))',
+  color,
+  isExpanded = false, 
+  opacity,
   unit,
+  showGrid = DEFAULT_SHOW_GRID,
+  showYAxis = DEFAULT_SHOW_Y_AXIS,
+  showXAxis = DEFAULT_SHOW_X_AXIS,
   onHover 
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   
-  // Calculate chart bounds
-  const maxValue = Math.max(...data.map(d => d.value));
-  const minValue = Math.min(...data.map(d => d.value));
-  const range = maxValue - minValue || 1;
+  // ✅ NEW - Resolve CSS custom properties for SVG compatibility
+  const resolvedColor = useResolvedColor(color);
   
-  // Generate chart points
-  const points = data.map((point, index) => {
-    const x = (index / (data.length - 1)) * 100;
-    const y = 100 - ((point.value - minValue) / range) * 80;
-    return { x, y, data: point };
-  });
+  // Initialize opacity manager (memoized for performance)
+  const opacityManager = useMemo(() => new ChartOpacityManager(), []);
+  
+  // Get chart calculations using smart hook
+  const { bounds, yTicks, chartPoints, hasValidData } = useChartData(data);
+  
+  // Get appropriate opacity for area charts
+  const chartOpacity = useMemo(() => 
+    opacityManager.getOpacity('area', isExpanded, opacity),
+    [opacityManager, isExpanded, opacity]
+  );
+  
+  // Get grid-specific opacity (lighter than chart opacity)
+  const gridOpacity = useMemo(() => {
+    const baseOpacity = opacity || (isExpanded ? 90 : 40); // area chart defaults
+    return opacityManager.getGridOpacity('area', baseOpacity);
+  }, [opacityManager, opacity, isExpanded]);
+  
+  // Extract opacity value for SVG attributes
+  const chartOpacityValue = useMemo(() => {
+    const match = chartOpacity.match(/opacity-(\d+)/);
+    return match ? parseInt(match[1]) : 40;
+  }, [chartOpacity]);
+  
+  // Convert grid opacity number to class-compatible value
+  const gridOpacityValue = useMemo(() => {
+    const match = gridOpacity.match(/opacity-(\d+)/);
+    return match ? parseInt(match[1]) : 15;
+  }, [gridOpacity]);
 
-  const pointsString = points.map(p => `${p.x},${p.y}`).join(' ');
-  const areaGradientId = generateGradientId(`area-${color}`);
+  // Generate SVG elements with resolved color
+  const pointsString = useMemo(() =>
+    pointsToSVGString(chartPoints), 
+    [chartPoints]
+  );
+  
+  const areaPoints = useMemo(() =>
+    createAreaPolygonPoints(chartPoints),
+    [chartPoints]
+  );
+  
+  const areaGradientId = useMemo(() => 
+    generateGradientId(`area-${resolvedColor}`), 
+    [resolvedColor]
+  );
+
+  // Tooltip management
+  const { getTooltipData } = useTooltipPosition(chartPoints, svgRef);
 
   // Handle mouse movement for tooltip
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!onHover || !svgRef.current) return;
+    if (!onHover || !hasValidData) return;
     
-    const rect = svgRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const closestPointIndex = Math.round((x / 100) * (data.length - 1));
-    const closestPoint = points[closestPointIndex];
-    
-    if (closestPoint) {
-      onHover({
-        x: e.clientX,
-        y: e.clientY,
-        timestamp: closestPoint.data.timestamp,
-        value: closestPoint.data.value,
-        unit
-      });
+    const tooltipData = getTooltipData(e, unit);
+    if (tooltipData) {
+      onHover(tooltipData);
     }
   };
 
-  // Y-axis ticks for grid lines
-  const yTicks = [
-    { value: maxValue, y: 10 },
-    { value: maxValue * 0.75, y: 27.5 },
-    { value: maxValue * 0.5, y: 45 },
-    { value: maxValue * 0.25, y: 62.5 },
-    { value: minValue, y: 80 }
-  ];
+  // Don't render if no valid data
+  if (!hasValidData) {
+    return (
+      <div className="h-full w-full flex items-center justify-center text-muted-foreground">
+        <span className="text-sm">No data available</span>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full w-full relative">
@@ -76,35 +106,37 @@ const AreaChart: React.FC<ChartProps> = ({
         onMouseMove={handleMouseMove}
         onMouseLeave={() => onHover?.(null)}
       >
-        {/* ✅ DRY Grid Component with both X and Y labels */}
+        {/* Grid Component */}
         <ChartGrid 
           yTicks={yTicks}
           data={data}
-          showVertical={true}
-          showYLabels={true}
-          showXLabels={true}
-          opacity="opacity-20"
+          showGrid={showGrid}
+          showYAxis={showYAxis}
+          showXAxis={showXAxis}
+          opacity={gridOpacityValue}
         />
         
-        {/* Area gradient definition */}
+        {/* Area gradient definition with resolved color */}
         <defs>
           <linearGradient id={areaGradientId} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={color} stopOpacity="0.4" />
-            <stop offset="100%" stopColor={color} stopOpacity="0.1" />
+            <stop offset="0%" stopColor={resolvedColor} stopOpacity="0.4" />
+            <stop offset="100%" stopColor={resolvedColor} stopOpacity="0.1" />
           </linearGradient>
         </defs>
         
-        {/* Area fill */}
+        {/* Area fill with resolved color */}
         <polygon
           fill={`url(#${areaGradientId})`}
-          points={`0,100 ${pointsString} 100,100`}
+          points={areaPoints}
+          fillOpacity={chartOpacityValue / 100}  // ✅ SVG opacity
         />
         
-        {/* Area border */}
+        {/* Area border with resolved color */}
         <polyline
           fill="none"
-          stroke={color}
-          strokeWidth="0.2"
+          stroke={resolvedColor}              // ✅ Resolved CSS custom properties
+          strokeWidth="0.15"
+          strokeOpacity={chartOpacityValue / 100}  // ✅ SVG opacity
           points={pointsString}
         />
       </svg>
