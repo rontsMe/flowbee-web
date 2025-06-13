@@ -1,3 +1,5 @@
+'use client';
+
 // src/components/metrics/MetricCard.tsx
 import React from 'react';
 import { Card, CardContent } from '@ui/card';
@@ -10,27 +12,11 @@ import { MetricCardProps } from './types';
 /**
  * MetricCard Component
  * 
- * Purpose: Base metric card component for displaying metrics with charts
- * Responsibility: Layout and UI structure only - no state management
+ * Purpose: Base metric card component utilizing globals.css theming
+ * Features: Uses bg-card and semantic colors from globals.css, CSS-in-JS styling, dynamic padding
  * 
- * Key Features:
- * - Controlled component (isExpanded from props)
- * - Uses shadcn/ui Card and Button components
- * - Accepts chart as children for maximum flexibility
- * - Theme-aware using CSS custom properties
- * - SOLID compliant - single responsibility
- * 
- * @param title - Metric title
- * @param value - Current metric value
- * @param unit - Optional unit (%, ms, etc.)
- * @param spec - Optional specification text
- * @param isExpanded - Whether card is expanded (controlled)
- * @param onToggleExpand - Callback to toggle expansion
- * @param timeRange - Current time range selection
- * @param onTimeRangeChange - Callback for time range changes
- * @param children - Chart component to render
- * @param className - Additional CSS classes
- * @returns MetricCard JSX element
+ * Methods:
+ * - render(): Returns metric card JSX using globals.css theming system
  */
 const MetricCard: React.FC<MetricCardProps> = ({
   title,
@@ -42,40 +28,95 @@ const MetricCard: React.FC<MetricCardProps> = ({
   timeRange,
   onTimeRangeChange,
   children,
-  className
+  className,
+  data // ✅ Accept data prop to determine if labels will show
 }) => {
+
+  // ✅ Check if we have valid data for labels (same logic as ChartGrid)
+  const hasValidData = Array.isArray(data) && data.length > 0;
+
+  const styles = {
+    container: "w-full",
+    
+    headerLeft: "space-y-1 mb-2",
+    
+    title: "text-lg font-semibold text-foreground",
+    
+    spec: "text-sm text-muted-foreground",
+    
+    valueContainer: "flex items-baseline gap-1",
+    
+    value: "text-3xl font-bold text-foreground",
+    
+    unit: "text-lg text-muted-foreground",
+    
+    card: `
+      relative transition-all duration-500 
+      hover:border-muted-foreground
+      bg-card border border-border
+      shadow-sm
+      backdrop-blur-sm
+      px-0 py-0
+    `,
+    
+    cardExpanded: "h-48",
+    
+    cardCollapsed: "aspect-video",
+    
+    cardContent: "h-full p-4",
+    
+    contentContainer: "h-full flex flex-col",
+    
+    controlsContainer: "flex justify-between items-center mb-3",
+    
+    controlsGroup: "flex items-center gap-2",
+    
+    expandButton: `
+      p-1 h-auto flex-shrink-0
+      transition-all duration-200
+      hover:bg-secondary
+      hover:scale-110
+      active:scale-95
+    `,
+    
+    expandIcon: "w-4 h-4 text-muted-foreground transition-all duration-200",
+    
+    chartContainer: "flex-1 min-h-0",
+    
+    chartContainerExpanded: "flex-1 min-h-0 pl-12" // Space for Y-axis when expanded
+  };
+
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn(styles.container, className)}>
       {/* Header Outside Card */}
-      <div className="mb-2 flex justify-between items-start">
-        <div className="space-y-1">
-          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-          {spec && (
-            <p className="text-sm text-muted-foreground">{spec}</p>
-          )}
-        </div>
-        
-        {/* Value Outside Card - Right */}
-        <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-bold text-foreground">{value}</span>
-          {unit && (
-            <span className="text-lg text-muted-foreground">{unit}</span>
-          )}
-        </div>
+      <div className={styles.headerLeft}>
+        <h3 className={styles.title}>{title}</h3>
+        {spec && (
+          <p className={styles.spec}>{spec}</p>
+        )}
       </div>
       
       {/* Card */}
       <Card 
         className={cn(
-          "relative transition-all duration-500 hover:border-muted-foreground",
-          isExpanded ? "h-48" : "aspect-video"
+          styles.card,
+          isExpanded ? styles.cardExpanded : styles.cardCollapsed
         )}
       >
-        <CardContent className="h-full p-4">
-          <div className="h-full flex flex-col">
-            {/* Controls Inside Card - Right Aligned */}
-            <div className="flex justify-end items-center mb-3">
-              <div className="flex items-center gap-2">
+        <CardContent className={styles.cardContent}>
+          <div className={styles.contentContainer}>
+            {/* Controls Inside Card - Value Left, Controls Right */}
+            <div className={styles.controlsContainer}>
+              {/* Value Left Side */}
+              <div className={styles.valueContainer}>
+                <span className={styles.value}>{value}</span>
+                {unit && (
+                  <span className={styles.unit}>{unit}</span>
+                )}
+              </div>
+              
+              {/* Controls Right Side */}
+              <div className={styles.controlsGroup}>
                 {/* Time Range Selector - Show when expanded */}
                 {isExpanded && onTimeRangeChange && timeRange && (
                   <TimeRangeSelector 
@@ -89,13 +130,13 @@ const MetricCard: React.FC<MetricCardProps> = ({
                   variant="ghost"
                   size="sm"
                   onClick={onToggleExpand}
-                  className="p-1 h-auto flex-shrink-0"
+                  className={styles.expandButton}
                   aria-label={isExpanded ? "Collapse chart" : "Expand chart"}
                 >
                   {isExpanded ? (
-                    <Minimize2 className="w-4 h-4 text-muted-foreground" />
+                    <Minimize2 className={styles.expandIcon} />
                   ) : (
-                    <Expand className="w-4 h-4 text-muted-foreground" />
+                    <Expand className={styles.expandIcon} />
                   )}
                 </Button>
               </div>
@@ -103,8 +144,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
             
             {/* Chart Container */}
             <div className={cn(
-              "flex-1 min-h-0",
-              isExpanded && "pl-12" // Space for Y-axis when expanded
+              isExpanded ? styles.chartContainerExpanded : styles.chartContainer
             )}>
               {children}
             </div>

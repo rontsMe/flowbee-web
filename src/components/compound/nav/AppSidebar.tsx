@@ -18,10 +18,12 @@ import { NavUser } from './NavUser';
 /**
  * AppSidebar Component
  * 
- * Purpose: Complete application sidebar with navigation and user sections
- * Combines: NavMain and NavUser compound components
+ * Purpose: Complete application sidebar utilizing globals.css theming
+ * Features: Uses bg-sidebar and related CSS custom properties from globals.css
  * 
- * @returns Complete sidebar JSX
+ * Methods:
+ * - getBrandStyles(): Returns Tailwind classes for brand section
+ * - render(): Returns complete sidebar JSX using globals.css theming
  */
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -37,7 +39,7 @@ export default function AppSidebar() {
   const mainNavItems = navItems.map(item => ({
     title: item.title,
     url: item.url,
-    icon: item.icon ? Icons[item.icon] : undefined,
+    icon: item.icon ? Icons[item.icon as keyof typeof Icons] : undefined,
     isActive: pathname === item.url,
     items: item.items?.map(subItem => ({
       title: subItem.title,
@@ -45,29 +47,67 @@ export default function AppSidebar() {
     }))
   }));
 
+  const styles = {
+    sidebar: "border-none shadow-2xl shadow-black/20",
+    
+    header: "border-none bg-transparent p-0",
+    
+    brand: `
+      flex items-center gap-3 px-2 py-2 
+      border-none bg-transparent
+      transition-all duration-300 ease-in-out
+      hover:scale-105
+    `,
+    
+    logo: `
+      w-8 h-8 
+      bg-primary
+      rounded-lg flex items-center justify-center
+      shadow-lg
+      transition-all duration-300 ease-in-out
+      hover:scale-110
+      ring-2 ring-primary/20
+    `,
+    
+    brandText: `
+      text-lg font-bold 
+      text-sidebar-foreground
+      transition-all duration-300
+      hover:text-primary
+    `,
+    
+    content: "overflow-x-hidden bg-transparent",
+    
+    footer: "border-none bg-transparent p-2",
+    
+    rail: "bg-gradient-to-b from-transparent via-white/5 to-transparent"
+  };
+
   return (
-    <Sidebar collapsible='icon'>
+    <Sidebar collapsible='icon' className={styles.sidebar}>
       {/* Header with Brand */}
-      <SidebarHeader>
-        <div className="flex items-center gap-3 px-2 py-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-            <Icons.logo className="w-5 h-5 text-white" />
+      <SidebarHeader className={styles.header}>
+        <div className={styles.brand}>
+          <div className={styles.logo}>
+            <Icons.logo className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-lg font-bold text-sidebar-foreground">Flowbee</span>
+          <span className={styles.brandText}>
+            Flowbee
+          </span>
         </div>
       </SidebarHeader>
 
       {/* Main Navigation */}
-      <SidebarContent className='overflow-x-hidden'>
+      <SidebarContent className={styles.content}>
         <NavMain items={mainNavItems} />
       </SidebarContent>
 
       {/* User Section */}
-      <SidebarFooter>
-        <NavUser user={mockUser} />
+      <SidebarFooter className={styles.footer}>
+        <NavUser />
       </SidebarFooter>
 
-      <SidebarRail />
+      <SidebarRail className={styles.rail} />
     </Sidebar>
   );
 }

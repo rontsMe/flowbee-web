@@ -9,56 +9,137 @@ import { Breadcrumbs } from './Breadcrumbs';
 import SearchInput from './SearchInput';
 import { NavUser } from './NavUser';
 import { ModeToggle } from './ThemeToggle';
-const mockUser = {
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  avatar: 'https://github.com/shadcn.png'
-};
 
 /**
  * Header Component
  * 
- * Purpose: Top navigation bar with breadcrumbs, search, and user controls
- * Combines: Multiple navigation compound components
+ * Purpose: Top navigation bar utilizing globals.css glass-morphism theming
+ * Features: Uses bg-card and backdrop-blur effects from globals.css
  * 
- * @returns Header navigation JSX
+ * Methods:
+ * - render(): Returns header JSX using globals.css theming system
  */
 export default function Header() {
+  
+  const styles = {
+    header: `
+      flex h-16 shrink-0 items-center justify-between gap-2 
+      transition-[width,height] ease-linear
+      group-has-data-[collapsible=icon]/sidebar-wrapper:h-12
+      backdrop-blur-lg backdrop-saturate-150
+      border-b border-border/50
+      bg-card/80
+      shadow-sm
+    `,
+    
+    leftSection: "flex items-center gap-2 px-4",
+    
+    rightSection: "flex items-center gap-2 px-4",
+    
+    sidebarTrigger: `
+      -ml-1 
+      hover:bg-accent 
+      transition-all duration-300
+    `,
+    
+    separator: `
+      mr-2 h-4 
+      bg-border/50
+    `,
+    
+    searchContainer: "hidden md:flex",
+    
+    activeIndicator: `
+      hidden lg:flex items-center gap-2 px-3 py-1.5
+      bg-secondary/50
+      border border-border/20
+      rounded-full
+      backdrop-blur-sm
+      shadow-sm
+      transition-all duration-300
+      hover:shadow-md
+      hover:scale-105
+    `,
+    
+    activePulse: `
+      w-2 h-2 rounded-full
+      bg-primary
+      animate-pulse
+    `,
+    
+    activeText: `
+      text-sm font-medium 
+      text-primary
+    `,
+    
+    notificationButton: `
+      relative
+      bg-card/50
+      backdrop-blur-sm
+      border border-border/50
+      shadow-sm
+      transition-all duration-300
+      hover:shadow-md
+      hover:scale-105
+      hover:bg-accent
+    `,
+    
+    notificationBadge: `
+      absolute -top-1 -right-1 h-5 w-5 
+      flex items-center justify-center p-0 text-xs
+      bg-destructive
+      shadow-sm
+      ring-2 ring-background
+      transition-all duration-300
+      animate-pulse
+    `,
+    
+    userSection: "flex items-center",
+    
+    themeSection: "flex items-center"
+  };
+
   return (
-    <header className='flex h-16 shrink-0 items-center justify-between gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12'>
+    <header className={styles.header}>
       {/* Left Section */}
-      <div className='flex items-center gap-2 px-4'>
-        <SidebarTrigger className='-ml-1' />
-        <Separator orientation='vertical' className='mr-2 h-4' />
+      <div className={styles.leftSection}>
+        <SidebarTrigger className={styles.sidebarTrigger} />
+        <Separator orientation='vertical' className={styles.separator} />
         <Breadcrumbs />
       </div>
 
       {/* Right Section */}
-      <div className='flex items-center gap-2 px-4'>
+      <div className={styles.rightSection}>
         {/* Search */}
-        <div className='hidden md:flex'>
+        <div className={styles.searchContainer}>
           <SearchInput />
         </div>
 
         {/* Active Node Indicator */}
-        <Badge variant="secondary" className="hidden lg:flex items-center gap-2">
-          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-          Active: enhance_audio
+        <Badge variant="secondary" className={styles.activeIndicator}>
+          <div className={styles.activePulse}></div>
+          <span className={styles.activeText}>
+            Active: enhance_audio
+          </span>
         </Badge>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className={styles.notificationButton}>
           <Icons.bell className="w-4 h-4" />
-          <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+          <Badge className={styles.notificationBadge}>
             3
           </Badge>
         </Button>
 
         {/* User Navigation */}
-        <NavUser />
+        <div className={styles.userSection}>
+          <NavUser />
+        </div>
 
         {/* Theme Toggle */}
-        <ModeToggle />
+        <div className={styles.themeSection}>
+          <ModeToggle />
+        </div>
       </div>
     </header>
   );

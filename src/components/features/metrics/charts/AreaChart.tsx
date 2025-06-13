@@ -1,19 +1,17 @@
 // src/components/metrics/charts/AreaChart.tsx
 import React, { useRef } from 'react';
 import { ChartProps, TooltipData, generateGradientId } from '../types';
+import ChartGrid from './ChartGrid';
 
 /**
  * AreaChart Component
  * 
- * Purpose: Render area chart with gradient fill for metric data
- * Responsibility: Chart rendering and hover interaction only
+ * Purpose: Render area chart with gradient fill utilizing ChartGrid for DRY grid system
+ * Features: Tooltip interaction, gradient fill, white dotted grid lines
  * 
- * @param data - Array of chart data points
- * @param isExpanded - Whether chart is in expanded view
- * @param color - Chart color (CSS custom property format)
- * @param unit - Optional unit for tooltip
- * @param onHover - Callback for hover events
- * @returns SVG area chart JSX element
+ * Methods:
+ * - handleMouseMove(): Handle tooltip positioning and data extraction
+ * - render(): Return SVG area chart with DRY grid component
  */
 const AreaChart: React.FC<ChartProps> = ({ 
   data, 
@@ -25,24 +23,8 @@ const AreaChart: React.FC<ChartProps> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   
   // Calculate chart bounds
-interface DataPoint {
-    value: number;
-    timestamp: number;
-}
-
-interface Point {
-    x: number;
-    y: number;
-    data: DataPoint;
-}
-
-interface YTick {
-    value: number;
-    y: number;
-}
-
-const maxValue: number = Math.max(...data.map((d: DataPoint) => d.value));
-const minValue: number = Math.min(...data.map((d: DataPoint) => d.value));
+  const maxValue = Math.max(...data.map(d => d.value));
+  const minValue = Math.min(...data.map(d => d.value));
   const range = maxValue - minValue || 1;
   
   // Generate chart points
@@ -75,14 +57,14 @@ const minValue: number = Math.min(...data.map((d: DataPoint) => d.value));
     }
   };
 
-  // Y-axis ticks for expanded view
-  const yTicks = isExpanded ? [
+  // Y-axis ticks for grid lines
+  const yTicks = [
     { value: maxValue, y: 10 },
     { value: maxValue * 0.75, y: 27.5 },
     { value: maxValue * 0.5, y: 45 },
     { value: maxValue * 0.25, y: 62.5 },
     { value: minValue, y: 80 }
-  ] : [];
+  ];
 
   return (
     <div className="h-full w-full relative">
@@ -94,22 +76,15 @@ const minValue: number = Math.min(...data.map((d: DataPoint) => d.value));
         onMouseMove={handleMouseMove}
         onMouseLeave={() => onHover?.(null)}
       >
-        {/* Grid lines for expanded view */}
-        {isExpanded && (
-          <g className="opacity-10">
-            {yTicks.map((tick, i) => (
-              <line 
-                key={i} 
-                x1="0" 
-                y1={tick.y} 
-                x2="100" 
-                y2={tick.y} 
-                stroke={color} 
-                strokeWidth="0.1"
-              />
-            ))}
-          </g>
-        )}
+        {/* ✅ DRY Grid Component with both X and Y labels */}
+        <ChartGrid 
+          yTicks={yTicks}
+          data={data}
+          showVertical={true}
+          showYLabels={true}
+          showXLabels={true}
+          opacity="opacity-20"
+        />
         
         {/* Area gradient definition */}
         <defs>
@@ -133,21 +108,6 @@ const minValue: number = Math.min(...data.map((d: DataPoint) => d.value));
           points={pointsString}
         />
       </svg>
-      
-      {/* Y-axis labels for expanded view */}
-      {isExpanded && (
-        <div className="absolute left-0 top-0 h-full w-12 pointer-events-none">
-          {yTicks.map((tick, i) => (
-            <div
-              key={i}
-              className="absolute text-xs text-muted-foreground -translate-y-1/2"
-              style={{ top: `${tick.y}%`, left: '-40px' }}
-            >
-              {tick.value.toFixed(0)}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

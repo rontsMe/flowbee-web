@@ -1,19 +1,17 @@
 // src/components/metrics/charts/BarChart.tsx
 import React from 'react';
-import { ChartProps, TooltipData } from '../types';
+import { ChartProps } from '../types';
+import ChartGrid from './ChartGrid';
 
 /**
  * BarChart Component
  * 
- * Purpose: Render bar chart for discrete metric data
- * Responsibility: Chart rendering and hover interaction only
+ * Purpose: Render bar chart for discrete metric data utilizing ChartGrid for DRY grid system
+ * Features: Tooltip interaction, hover effects, white dotted grid lines
  * 
- * @param data - Array of chart data points
- * @param isExpanded - Whether chart is in expanded view
- * @param color - Chart color (CSS custom property format)
- * @param unit - Optional unit for tooltip
- * @param onHover - Callback for hover events
- * @returns Bar chart JSX element
+ * Methods:
+ * - handleMouseMove(): Handle tooltip positioning and data extraction
+ * - render(): Return bar chart JSX with DRY grid component
  */
 const BarChart: React.FC<ChartProps> = ({ 
   data, 
@@ -39,35 +37,34 @@ const BarChart: React.FC<ChartProps> = ({
     });
   };
 
-  // Y-axis ticks for expanded view
-  const yTicks = isExpanded ? [
-    { value: maxValue, label: maxValue.toFixed(0) },
-    { value: maxValue * 0.75, label: (maxValue * 0.75).toFixed(0) },
-    { value: maxValue * 0.5, label: (maxValue * 0.5).toFixed(0) },
-    { value: maxValue * 0.25, label: (maxValue * 0.25).toFixed(0) },
-    { value: 0, label: '0' }
-  ] : [];
+  // Y-axis ticks for grid lines
+  const yTicks = [
+    { value: maxValue, y: 10 },
+    { value: maxValue * 0.75, y: 27.5 },
+    { value: maxValue * 0.5, y: 45 },
+    { value: maxValue * 0.25, y: 62.5 },
+    { value: 0, y: 80 }
+  ];
 
   return (
     <div className="h-full w-full relative">
-      {/* Y-axis labels for expanded view */}
-      {isExpanded && (
-        <div className="absolute left-0 top-0 h-full w-12 pointer-events-none">
-          {yTicks.map((tick, i) => (
-            <div
-              key={i}
-              className="absolute text-xs text-muted-foreground -translate-y-1/2"
-              style={{ 
-                top: `${(1 - tick.value / maxValue) * 80 + 10}%`, 
-                left: '-40px' 
-              }}
-            >
-              {tick.label}
-            </div>
-          ))}
-        </div>
-      )}
-      
+      {/* Background SVG for grid lines */}
+      <svg 
+        className="absolute inset-0 w-full h-full pointer-events-none" 
+        viewBox="0 0 100 100" 
+        preserveAspectRatio="none"
+      >
+        {/* ✅ DRY Grid Component with both X and Y labels */}
+        <ChartGrid 
+          yTicks={yTicks}
+          data={displayData}
+          showVertical={true}
+          showYLabels={true}
+          showXLabels={true}
+          opacity="opacity-20"
+        />
+      </svg>
+
       {/* Bar chart container */}
       <div className="h-full w-full flex items-end justify-between px-2">
         {displayData.map((point, index) => {

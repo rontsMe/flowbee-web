@@ -1,3 +1,5 @@
+'use client';
+
 // src/components/metrics/SystemMetricCard.tsx
 import React, { useState } from 'react';
 import MetricCard from './MetricCard';
@@ -22,7 +24,7 @@ import {
  * - Extends base MetricCard via composition
  * - Automatically selects chart component based on chartType
  * - Manages tooltip state for chart interactions
- * - Uses system color mapping from theme
+ * - Accepts external color prop or uses system color mapping
  * - SOLID compliant - delegates layout to MetricCard
  * 
  * @param id - System metric identifier (cpu, memory, gpu, disk)
@@ -37,6 +39,7 @@ import {
  * @param timeRange - Current time range selection
  * @param onTimeRangeChange - Callback for time range changes
  * @param className - Additional CSS classes
+ * @param color - Optional external color override
  * @returns SystemMetricCard JSX element
  */
 const SystemMetricCard: React.FC<SystemMetricCardProps> = ({
@@ -51,7 +54,8 @@ const SystemMetricCard: React.FC<SystemMetricCardProps> = ({
   onToggleExpand,
   timeRange,
   onTimeRangeChange,
-  className
+  className,
+  color // ✅ Accept external color prop
 }) => {
   // Tooltip state management
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
@@ -65,14 +69,16 @@ const SystemMetricCard: React.FC<SystemMetricCardProps> = ({
 
   // Get chart component and color
   const ChartComponent = chartComponents[chartType];
-  const chartColor = getChartColor(id, 'system');
+  
+  // ✅ Use external color if provided, otherwise fallback to system mapping
+  const chartColor = color || getChartColor(id, 'system');
 
   // Create chart element with props
   const chartElement = (
     <ChartComponent
       data={data}
       isExpanded={isExpanded}
-      color={chartColor}
+      color={chartColor} // ✅ Pass external or mapped color
       unit={unit}
       onHover={setTooltip}
     />
@@ -90,6 +96,7 @@ const SystemMetricCard: React.FC<SystemMetricCardProps> = ({
         timeRange={timeRange}
         onTimeRangeChange={onTimeRangeChange}
         className={className}
+        data={data} // ✅ Pass data for dynamic padding
       >
         {chartElement}
       </MetricCard>

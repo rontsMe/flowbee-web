@@ -24,6 +24,8 @@
       "@ui/*": ["components/ui/*"],
       "@compound/*": ["components/compound/*"],
       "@layout/*": ["components/layout/*"],
+      "@features/*": ["components/features/*"],
+      "@pages/*": ["components/pages/*"],
       "@kbar/*": ["components/kbar/*"],
       "@lib/*": ["lib/*"],
       "@hooks/*": ["hooks/*"],

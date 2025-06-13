@@ -22,11 +22,12 @@ import { Icon, Icons } from '@icons';
 /**
  * NavMain Compound Component
  * 
- * Purpose: Main navigation section with collapsible menu items
- * Combines: sidebar UI primitives with navigation logic
+ * Purpose: Main navigation utilizing globals.css primary theming
+ * Features: Uses bg-primary and bg-secondary from globals.css for theming
  * 
- * @param items - Navigation items with optional sub-items
- * @returns Main navigation section JSX
+ * Methods:
+ * - getMenuButtonStyles(isActive): Returns Tailwind classes based on active state
+ * - render(): Returns navigation JSX using globals.css theming
  */
 export function NavMain({
   items
@@ -42,10 +43,95 @@ export function NavMain({
     }[];
   }[];
 }) {
+
+  const styles = {
+    group: "px-2",
+    
+    groupLabel: `
+      text-xs font-semibold uppercase tracking-wider
+      text-primary
+      mb-2 px-2
+    `,
+    
+    groupContent: "flex flex-col gap-2",
+    
+    menuButtonActive: `
+      bg-primary text-primary-foreground
+      hover:bg-primary/90 hover:text-primary-foreground 
+      active:bg-primary/90 active:text-primary-foreground
+      min-w-8 duration-300 ease-in-out
+      transition-all
+      backdrop-blur-sm
+      border border-transparent
+      shadow-sm
+      hover:shadow-md
+      hover:scale-105
+      active:scale-95
+    `,
+    
+    menuButtonInactive: `
+      bg-secondary/50 text-sidebar-foreground
+      hover:bg-accent hover:text-accent-foreground
+      border border-transparent
+      min-w-8 duration-300 ease-in-out
+      transition-all
+      backdrop-blur-sm
+      shadow-sm
+      hover:shadow-sm
+      hover:scale-102
+      active:scale-98
+    `,
+    
+    menuIcon: `
+      transition-all duration-300 
+      group-hover:scale-110
+    `,
+    
+    menuText: "font-medium",
+    
+    chevron: `
+      ml-auto transition-all duration-300 ease-in-out
+      group-data-[state=open]/collapsible:rotate-90
+      group-data-[state=open]/collapsible:text-primary
+      hover:scale-110
+    `,
+    
+    subMenu: `
+      bg-secondary/30
+      backdrop-blur-sm
+      border-l border-primary/20
+      ml-4 pl-4 mt-2
+      rounded-r-lg
+      shadow-sm
+    `,
+    
+    subMenuButton: `
+      transition-all duration-200 ease-in-out
+      rounded-md
+      hover:bg-accent hover:text-accent-foreground
+      hover:translate-x-1
+      active:scale-95
+    `,
+    
+    subMenuText: "text-sm"
+  };
+
+  /**
+   * getMenuButtonStyles - Get appropriate button styles based on active state
+   * Purpose: Return correct Tailwind classes for active/inactive states
+   * @param isActive - Whether the menu item is currently active
+   * @returns Tailwind classes for menu button
+   */
+  const getMenuButtonStyles = (isActive: boolean = false): string => {
+    return isActive ? styles.menuButtonActive : styles.menuButtonInactive;
+  };
+
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
-      <SidebarGroupContent className='flex flex-col gap-2'>
+    <SidebarGroup className={styles.group}>
+      <SidebarGroupLabel className={styles.groupLabel}>
+        Platform
+      </SidebarGroupLabel>
+      <SidebarGroupContent className={styles.groupContent}>
         <SidebarMenu>
           {items.map((item) => (
             <Collapsible
@@ -58,20 +144,29 @@ export function NavMain({
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
                     tooltip={item.title}
-                    className='bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear'
+                    className={getMenuButtonStyles(item.isActive)}
                   >
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
-                    <Icons.chevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                    {item.icon && (
+                      <item.icon className={styles.menuIcon} />
+                    )}
+                    <span className={styles.menuText}>
+                      {item.title}
+                    </span>
+                    <Icons.chevronRight className={styles.chevron} />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
-                  <SidebarMenuSub>
+                  <SidebarMenuSub className={styles.subMenu}>
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton asChild>
+                        <SidebarMenuSubButton 
+                          asChild
+                          className={styles.subMenuButton}
+                        >
                           <a href={subItem.url}>
-                            <span>{subItem.title}</span>
+                            <span className={styles.subMenuText}>
+                              {subItem.title}
+                            </span>
                           </a>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
