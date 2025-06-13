@@ -216,7 +216,7 @@ export default function DashboardPage() {
         {/* ✅ NEW ARCHITECTURE - System Overview Section */}
         <SystemMetricCard 
           title="System Overview"
-          columns={{ default: 1, md: 2, lg: 2, xl: 4 }}
+          columns={{ default: 4, md: 2, lg: 4, xl: 4 }}
         >
           {/* CPU Metric Card */}
           <MetricCard
@@ -224,8 +224,6 @@ export default function DashboardPage() {
             value={getLatestValue(systemData.cpu, '59')}
             unit="%"
             spec="AMD 4-core processor"
-            isExpanded={expandedCards.cpu || false}
-            onToggleExpand={() => handleCardToggle('cpu')}
             timeRange={timeRanges.cpu}
             onTimeRangeChange={(range) => handleTimeRangeChange('cpu', range)}
             
@@ -245,8 +243,6 @@ export default function DashboardPage() {
             value={getLatestValue(systemData.memory, '41')}
             unit="%"
             spec="32 GB RAM"
-            isExpanded={expandedCards.memory || false}
-            onToggleExpand={() => handleCardToggle('memory')}
             timeRange={timeRanges.memory}
             onTimeRangeChange={(range) => handleTimeRangeChange('memory', range)}
             
@@ -265,8 +261,6 @@ export default function DashboardPage() {
             value={getLatestValue(systemData.gpu, '14')}
             unit="%"
             spec="NVIDIA GPU"
-            isExpanded={expandedCards.gpu || false}
-            onToggleExpand={() => handleCardToggle('gpu')}
             timeRange={timeRanges.gpu}
             onTimeRangeChange={(range) => handleTimeRangeChange('gpu', range)}
             
@@ -285,8 +279,6 @@ export default function DashboardPage() {
             value={getLatestValue(systemData.disk, '73')}
             unit="%"
             spec="1TB NVMe SSD"
-            isExpanded={expandedCards.disk || false}
-            onToggleExpand={() => handleCardToggle('disk')}
             timeRange={timeRanges.disk}
             onTimeRangeChange={(range) => handleTimeRangeChange('disk', range)}
             
@@ -313,7 +305,7 @@ export default function DashboardPage() {
         
         <SystemMetricCard 
           title="Processing Overview"
-          columns={{ default: 1, md: 2, lg: 2, xl: 4 }}
+          columns={{ default: 4, md: 2, lg: 4, xl: 4 }}
         >
 
           {/* Executions per Minute */}
@@ -321,8 +313,6 @@ export default function DashboardPage() {
             title="Executions per Minute"
             value={getLatestValue(processingData.executions, '796')}
             unit="/min"
-            isExpanded={expandedCards.executions || false}
-            onToggleExpand={() => handleCardToggle('executions')}
             timeRange={timeRanges.executions}
             onTimeRangeChange={(range) => handleTimeRangeChange('executions', range)}
             
@@ -340,8 +330,6 @@ export default function DashboardPage() {
             title="Average Method Duration"
             value={getLatestValue(processingData.duration, '263')}
             unit="ms"
-            isExpanded={expandedCards.duration || false}
-            onToggleExpand={() => handleCardToggle('duration')}
             timeRange={timeRanges.duration}
             onTimeRangeChange={(range) => handleTimeRangeChange('duration', range)}
             
@@ -359,8 +347,6 @@ export default function DashboardPage() {
             title="Queue Size"
             value={getLatestValue(processingData.queue, '21')}
             unit=" items"
-            isExpanded={expandedCards.queue || false}
-            onToggleExpand={() => handleCardToggle('queue')}
             timeRange={timeRanges.queue}
             onTimeRangeChange={(range) => handleTimeRangeChange('queue', range)}
             
@@ -378,8 +364,6 @@ export default function DashboardPage() {
             title="Concurrency Level"
             value={getLatestValue(processingData.concurrency, '6')}
             unit=""
-            isExpanded={expandedCards.concurrency || false}
-            onToggleExpand={() => handleCardToggle('concurrency')}
             timeRange={timeRanges.concurrency}
             onTimeRangeChange={(range) => handleTimeRangeChange('concurrency', range)}
             

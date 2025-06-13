@@ -56,19 +56,15 @@ export interface MetricCardProps {
  * For the higher-level component that manages chart creation
  */
 export interface SystemMetricCardProps {
-  id: SystemMetricId;
-  label: string;
-  spec?: string;
-  value: string | number;
-  unit?: string;
-  chartType: ChartType;
-  data: ChartDataPoint[];
-  isExpanded: boolean;
-  onToggleExpand: () => void;
-  timeRange?: string;
-  onTimeRangeChange?: (range: string) => void;
+  title: string;
+  children: React.ReactNode;
   className?: string;
-  color?: string; // ✅ Added optional color prop
+  columns?: {
+    default?: number;
+    md?: number;
+    lg?: number;
+    xl?: number;
+  };
 }
 
 /**
@@ -327,3 +323,36 @@ export const DEFAULT_PERFORMANCE_METRICS = {
   'queue-size': { baseValue: 23, variance: 15, chartType: 'area' as ChartType },
   'concurrency-level': { baseValue: 8, variance: 4, chartType: 'line' as ChartType }
 } as const;
+
+
+export interface GridConfig {
+  default?: number;  // Mobile (default: 1)
+  sm?: number;       // Small screens (default: 1) 
+  md?: number;       // Medium screens (default: 2)
+  lg?: number;       // Large screens (default: 2)
+  xl?: number;       // Extra large (default: 3)
+}
+
+/**
+ * State tracking for expanded card
+ */
+export interface ExpandedCardState {
+  index: number;           // Index of expanded card
+  previousSiblings: number[];  // Indices of cards that were hidden
+}
+
+/**
+ * Result of row layout calculation
+ */
+export interface RowCalculationResult {
+  cardsPerRow: number;     // How many cards fit per row currently
+  totalRows: number;       // Total number of rows
+  cardPositions: number[]; // Which row each card is in
+}
+
+/**
+ * Base props for metric cards
+ */
+export interface MetricCardProps {
+  children: React.ReactNode;
+}

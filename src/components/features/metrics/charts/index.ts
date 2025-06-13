@@ -13,7 +13,16 @@
 export { default as LineChart } from './LineChart';
 export { default as AreaChart } from './AreaChart'; 
 export { default as BarChart } from './BarChart';
-export { default as ChartGrid } from './ChartGrid';
+
+
+import {  ChartOpacityManager,
+  DEFAULT_CHART_TYPE,
+  DEFAULT_OPACITY,
+  DEFAULT_SHOW_GRID,
+  DEFAULT_SHOW_Y_AXIS,
+  DEFAULT_SHOW_X_AXIS,
+  DEFAULT_CHART_OPACITY_CONFIG
+} from './types';
 
 // ============================================
 // TYPES AND INTERFACES
@@ -82,6 +91,11 @@ export {
 import LineChart from './LineChart';
 import AreaChart from './AreaChart';
 import BarChart from './BarChart';
+import { isValidChartType } from './chartUtils';
+import { ChartProps } from './types';
+// ============================================
+// UTILITY FUNCTIONS FOR COMMON PATTERNS
+// ============================================
 
 /**
  * Chart component mapping for dynamic rendering
@@ -92,11 +106,6 @@ export const CHART_COMPONENTS = {
   area: AreaChart,
   bar: BarChart
 } as const;
-
-// ============================================
-// UTILITY FUNCTIONS FOR COMMON PATTERNS
-// ============================================
-
 /**
  * Get chart component by type
  * @param chartType - Chart type string

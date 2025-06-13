@@ -93,7 +93,7 @@ export default function RootLayout({
                 <Header />
                 
                 {/* Page Content */}
-                <main className="flex-1 overflow-hidden">
+                <main >
                   <div className="h-full overflow-auto">
                     {children}
                   </div>
