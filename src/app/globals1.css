@@ -45,6 +45,13 @@
   --color-interactive-secondary: #64748b;
   --color-interactive-secondary-hover: #334155;
 
+  /* 🎯 Button State Primitives */
+  --color-button-active-start: #3b82f6;
+  --color-button-active-end: #2563eb;
+  --color-button-active-text: #ffffff;
+  --color-button-hover-start: #f1f5f9;
+  --color-button-hover-end: #e2e8f0;
+
   /* ✒️ Typography Primitives */
   --font-family-sans: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-family-mono: 'Geist Mono', 'SF Mono', monospace;
@@ -177,6 +184,13 @@
   --color-interactive-primary-hover: #5a7bd1;
   --color-interactive-secondary: #a8a9aa;
   --color-interactive-secondary-hover: #d1d5db;
+
+  /* 🎯 Button State Primitives */
+  --color-button-active-start: #252a3a;
+  --color-button-active-end: #1f242f;
+  --color-button-active-text: #f4f4f5;
+  --color-button-hover-start: #1f242f;
+  --color-button-hover-end: #1a1f2a;
 
   /* 📊 Shadow Primitives - Darker for dark theme */
   --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);

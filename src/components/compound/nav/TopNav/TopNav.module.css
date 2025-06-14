@@ -1,44 +1,66 @@
+/* ============================================
+   TOP NAVIGATION
+============================================ */
+
 .topNav {
-    height: var(--size-12);
-    background: var(--color-dark-200);
-    border-bottom: 1px solid var(--sidebar-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--spacing-4);
-  }
-  
-  .left, .center, .right {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-4);
-  }
-  
-  .center {
-    flex: 1;
-    justify-content: center;
-  }
-  
-  .iconButton {
-    background: var(--sidebar);
-    border: 1px solid var(--color-border-primary);
-    border-radius: var(--radius-full);
-    padding: var(--spacing-1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background var(--duration-fast) var(--easing-spring),
-                border-color var(--duration-fast) var(--easing-spring);
-  }
-  
-  .iconButton:hover {
-    background: var(--color-brand-light);
-    border-color: var(--color-brand-primary);
-  }
-  
-  .iconButton:focus-visible {
-    outline: 2px solid var(--color-brand-primary);
-    outline-offset: 2px;
-  }
-  
+  /* Component-level semantic tokens from primitives */
+  --topnav-bg: var(--color-surface-tertiary);        /* Same as workspace/main content */
+  --topnav-border: var(--color-border-tertiary);     /* Stronger gray (not blue) */
+  --topnav-text: var(--color-text-primary);
+  --topnav-text-muted: var(--color-text-secondary);
+
+  height: var(--size-12);
+  background: var(--topnav-bg);
+  border-bottom: 1px solid var(--topnav-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding:  var(--spacing-8) var(--spacing-6);;
+  color: var(--topnav-text);
+}
+
+.left, 
+.center, 
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.center {
+  flex: 1;
+  justify-content: center;
+}
+
+.iconButton {
+  /* Component-level semantic tokens */
+  --button-bg: var(--color-surface-primary);
+  --button-border: var(--color-border-secondary);
+  --button-hover-bg: var(--color-button-hover-start);
+  --button-hover-border: var(--color-brand-primary);
+
+  background: var(--button-bg);
+  border: 1px solid var(--button-border);
+  border-radius: var(--radius-full);
+  padding: var(--spacing-2);
+  color: var(--topnav-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 
+    background var(--duration-fast) var(--easing-spring),
+    border-color var(--duration-fast) var(--easing-spring),
+    color var(--duration-fast) var(--easing-spring);
+}
+
+.iconButton:hover {
+  background: var(--button-hover-bg);
+  border-color: var(--button-hover-border);
+  color: var(--color-brand-primary);
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}

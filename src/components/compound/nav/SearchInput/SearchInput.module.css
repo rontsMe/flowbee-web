@@ -1,28 +1,56 @@
+/* ============================================
+   SEARCH INPUT COMPONENT
+============================================ */
+
 .searchContainer {
-    position: relative;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    max-width: 20rem;
-    width: 100%;
-  }
-  
-  .searchInput {
-    width: 100%;
-    padding: var(--spacing-2) var(--spacing-10) var(--spacing-2) var(--spacing-4);
-    background: var(--color-dark-400);
-    border: 1px solid var(--sidebar-border);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-sm);
-    color: var(--color-text-primary);
-  }
-  
-  .shortcut {
-    position: absolute;
-    right: var(--spacing-3);
-    font-size: var(--font-size-xs);
-    color: var(--sidebar-text-muted);
-    background: transparent;
-    pointer-events: none;
-  }
-  
+  /* Component-level semantic tokens from primitives */
+  --search-bg: var(--color-surface-accent);
+  --search-border: var(--color-border-secondary);
+  --search-text: var(--color-text-primary);
+  --search-placeholder: var(--color-text-muted);
+  --search-shortcut: var(--color-text-muted);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  max-width: 20rem;
+  width: 100%;
+}
+
+.searchInput {
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-10) var(--spacing-2) var(--spacing-4);
+  background: var(--search-bg);
+  border: 1px solid var(--search-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--search-text);
+  font-family: var(--font-family-sans);
+  transition: all var(--duration-normal) var(--easing-spring);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--search-placeholder);
+}
+
+.searchInput:focus {
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.searchContainer:hover .searchInput {
+  border-color: var(--color-border-primary);
+}
+
+.shortcut {
+  position: absolute;
+  right: var(--spacing-3);
+  font-size: var(--font-size-xs);
+  color: var(--search-shortcut);
+  background: transparent;
+  pointer-events: none;
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-medium);
+}
