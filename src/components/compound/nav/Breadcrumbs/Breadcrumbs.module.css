@@ -1,0 +1,29 @@
+.breadcrumbBar {
+    padding: var(--spacing-3) var(--spacing-6);
+    background: transparent;
+    font-size: var(--font-size-sm);
+    color: var(--sidebar-text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+  
+  .link {
+    color: var(--sidebar-text-muted);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--easing-spring);
+  }
+  
+  .link:hover {
+    color: var(--sidebar-text-active);
+  }
+  
+  .separator {
+    color: var(--sidebar-text-muted);
+  }
+  
+  .current {
+    color: var(--sidebar-text-active);
+    font-weight: var(--font-weight-medium);
+  }
+  

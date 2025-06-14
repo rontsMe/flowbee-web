@@ -1,0 +1,7 @@
+.topStack {
+    display: flex;
+    flex-direction: column;
+    background: var(--sidebar);
+    border-bottom: 1px solid var(--sidebar-border);
+  }
+  

@@ -1,0 +1,21 @@
+.userContainer {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-2);
+}
+.avatarImage,
+.avatarFallback {
+  width: var(--size-8);
+  height: var(--size-8);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-primary); /* Add border */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  color: var(--sidebar-text-active);
+  background-color: var(--sidebar-active);
+  object-fit: cover;
+  box-sizing: border-box; /* ensure border included */
+}
