@@ -1,46 +1,61 @@
 /* ============================================
-   🌐 GLOBAL DESIGN TOKENS (THEME-AWARE)
+   🌐 PURE DESIGN PRIMITIVES
+   Architecture: Primitives Only - No Components
+   Usage: Referenced by CSS Modules via var()
 ============================================ */
 
 /* 🔆 LIGHT THEME (DEFAULT) */
 :root {
-  /* 🎨 Backgrounds */
-  --color-dark-100: #ffffff;       /* Main background */
-  --color-dark-200: #f8fafc;       /* Card / sidebar BG */
-  --color-dark-300: #f1f5f9;       /* Hover BG */
-  --color-dark-400: #e2e8f0;       /* Input background */
-  --color-dark-500: #cbd5e1;       /* Border muted */
-  --color-dark-600: #94a3b8;       /* Border strong */
+  /* 🎨 Surface Primitives */
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #f8fafc;
+  --color-surface-tertiary: #f1f5f9;
+  --color-surface-accent: #e2e8f0;
+  --color-surface-muted: #cbd5e1;
+  --color-surface-strong: #94a3b8;
 
-  --color-brand-primary: #2563eb;    /* stronger, deeper blue */
-  --color-brand-light: #3b82f6;      /* soft lighter blue */
-  --color-brand-dark: #1e40af;       /* rich dark blue */
+  /* 🌟 Brand Primitives */
+  --color-brand-primary: #3b82f6;
+  --color-brand-light: #3b82f6;
+  --color-brand-dark: #2563eb;
+  --color-brand-darker: #1d4ed8;
 
-  --color-text-primary: #1e2a45;     /* dark blue-gray for crisp text */
-  --color-text-muted: #64748b;       /* steel blue-gray */
-  --color-border-primary: #3b82f6;   /* brand blue for borders */
+  /* ✒️ Text Primitives */
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-tertiary: #94a3b8;
+  --color-text-muted: #94a3b8;
+  --color-text-inverse: #ffffff;
 
-
-  --color-interactive-primary: #3b82f6;
-  --color-interactive-primary-hover: #2563eb;
-  --color-interactive-primary-text: #ffffff;
-  --color-interactive-secondary-text: #1e3a8a;
-
-  /* 🔲 Borders - Blue-Toned Grays */
+  /* 🔲 Border Primitives */
   --color-border-primary: #3b82f6;
   --color-border-secondary: #e2e8f0;
-  --color-border-focus: #3b82f6;
+  --color-border-tertiary: #cbd5e1;
+  --color-border-muted: #f1f5f9;
 
+  /* 🎯 State Primitives */
+  --color-state-success: #10b981;
+  --color-state-warning: #f59e0b;
+  --color-state-error: #ef4444;
+  --color-state-info: #3b82f6;
 
-  /* ✒️ Typography */
+  /* 🌈 Interaction Primitives */
+  --color-interactive-primary: #3b82f6;
+  --color-interactive-primary-hover: #2563eb;
+  --color-interactive-secondary: #64748b;
+  --color-interactive-secondary-hover: #334155;
+
+  /* ✒️ Typography Primitives */
   --font-family-sans: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-family-mono: 'Geist Mono', 'SF Mono', monospace;
 
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.25rem;      /* 20px */
+  --font-size-2xl: 1.5rem;      /* 24px */
+  --font-size-3xl: 1.875rem;    /* 30px */
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -51,96 +66,126 @@
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
 
-  /* 📏 Spacing */
+  /* 📏 Spacing Primitives */
   --spacing-0: 0;
-  --spacing-1: 0.25rem;
-  --spacing-2: 0.5rem;
-  --spacing-3: 0.75rem;
-  --spacing-4: 1rem;
-  --spacing-5: 1.25rem;
-  --spacing-6: 1.5rem;
-  --spacing-8: 2rem;
-  --spacing-10: 2.5rem;
-  --spacing-12: 3rem;
-  --spacing-16: 4rem;
+  --spacing-1: 0.25rem;    /* 4px */
+  --spacing-2: 0.5rem;     /* 8px */
+  --spacing-3: 0.75rem;    /* 12px */
+  --spacing-4: 1rem;       /* 16px */
+  --spacing-5: 1.25rem;    /* 20px */
+  --spacing-6: 1.5rem;     /* 24px */
+  --spacing-8: 2rem;       /* 32px */
+  --spacing-10: 2.5rem;    /* 40px */
+  --spacing-12: 3rem;      /* 48px */
+  --spacing-16: 4rem;      /* 64px */
+  --spacing-20: 5rem;      /* 80px */
+  --spacing-24: 6rem;      /* 96px */
 
-  --spacing-xs: var(--spacing-1);
-  --spacing-sm: var(--spacing-2);
-  --spacing-md: var(--spacing-3);
-  --spacing-lg: var(--spacing-4);
-  --spacing-xl: var(--spacing-6);
-  --spacing-2xl: var(--spacing-8);
+  /* 📐 Size Primitives */
+  --size-4: 1rem;          /* 16px */
+  --size-5: 1.25rem;       /* 20px */
+  --size-6: 1.5rem;        /* 24px */
+  --size-8: 2rem;          /* 32px */
+  --size-10: 2.5rem;       /* 40px */
+  --size-12: 3rem;         /* 48px */
+  --size-16: 4rem;         /* 64px */
+  --size-20: 5rem;         /* 80px */
 
-  /* 📐 Sizes */
-  --size-4: 1rem;
-  --size-5: 1.25rem;
-  --size-6: 1.5rem;
-  --size-8: 2rem;
-  --size-10: 2.5rem;
-  --size-12: 3rem;
-  --size-16: 4rem;
-
-  --size-button-md: 2.5rem;
-  --size-icon-md: 1.25rem;
-  --size-2xl: 4rem;
-
-  --size-xs: var(--size-4);
-  --size-sm: var(--size-6);
-  --size-md: var(--size-8);
-  --size-lg: var(--size-10);
-  --size-xl: var(--size-12);
-
-  /* ⭕ Radius */
+  /* ⭕ Radius Primitives */
   --radius-none: 0;
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-md: 0.5rem;     /* 8px */
+  --radius-lg: 0.75rem;    /* 12px */
+  --radius-xl: 1rem;       /* 16px */
+  --radius-2xl: 1.5rem;    /* 24px */
   --radius-full: 9999px;
 
-  /* 🔁 Transitions */
+  /* 🔁 Animation Primitives */
+  --duration-instant: 0ms;
   --duration-fast: 150ms;
   --duration-normal: 200ms;
   --duration-slow: 300ms;
+  --duration-slower: 500ms;
 
+  --easing-linear: linear;
   --easing-ease: ease;
+  --easing-ease-in: ease-in;
+  --easing-ease-out: ease-out;
   --easing-ease-in-out: ease-in-out;
   --easing-spring: cubic-bezier(0.4, 0, 0.2, 1);
+  --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-  /* 🧱 Z-Index */
+  /* 🧱 Z-Index Primitives */
   --z-base: 0;
   --z-raised: 10;
+  --z-overlay: 20;
   --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
   --z-modal: 400;
+  --z-popover: 500;
+  --z-tooltip: 600;
   --z-max: 9999;
+
+  /* 📊 Shadow Primitives */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-none: none;
 }
 
 /* 🌙 DARK THEME */
 .dark {
-  --color-dark-100: #1f2937;
-  --color-dark-200: #1a1f2e;
-  --color-dark-300: #151a26;
-  --color-dark-400: #252a3a;
-  --color-dark-500: #1f242f;
-  --color-dark-600: #2a2f3e;
+  /* 🎨 Surface Primitives */
+  --color-surface-primary: #1a1f2e;
+  --color-surface-secondary: #151a26;
+  --color-surface-tertiary: #1f2937;
+  --color-surface-accent: #252a3a;
+  --color-surface-muted: #1f242f;
+  --color-surface-strong: #2a2f3e;
 
+  /* 🌟 Brand Primitives */
+  --color-brand-primary: #4f6dc7;
+  --color-brand-light: #5a7bd1;
+  --color-brand-dark: #3d5aa3;
+  --color-brand-darker: #2d4281;
+
+  /* ✒️ Text Primitives */
   --color-text-primary: #f4f4f5;
   --color-text-secondary: #d1d5db;
   --color-text-tertiary: #9ca3af;
   --color-text-muted: #a8a9aa;
+  --color-text-inverse: #1a1f2e;
 
-  --color-brand-primary: #4f6dc7;
-  --color-brand-light: #5a7bd1;
-  --color-brand-dark: #3d5aa3;
-
-  --color-interactive-primary: #4f6dc7;
-  --color-interactive-primary-hover: #5a7bd1;
-  --color-interactive-primary-text: #f4f4f5;
-  --color-interactive-secondary-text: #f4f4f5;
-
+  /* 🔲 Border Primitives */
   --color-border-primary: #2a2f3e;
   --color-border-secondary: #2a2f3e;
-  --color-border-focus: #4f6dc7;
+  --color-border-tertiary: #1f242f;
+  --color-border-muted: #151a26;
+
+  /* 🎯 State Primitives */
+  --color-state-success: #10b981;
+  --color-state-warning: #f59e0b;
+  --color-state-error: #ef4444;
+  --color-state-info: #4f6dc7;
+
+  /* 🌈 Interaction Primitives */
+  --color-interactive-primary: #4f6dc7;
+  --color-interactive-primary-hover: #5a7bd1;
+  --color-interactive-secondary: #a8a9aa;
+  --color-interactive-secondary-hover: #d1d5db;
+
+  /* 📊 Shadow Primitives - Darker for dark theme */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-none: none;
 }
 
 /* ============================================
@@ -152,29 +197,20 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-family-sans);
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
-  background-color: var(--color-dark-100);
+  background-color: var(--color-surface-tertiary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* ============================================
-   🔧 UTILITY CLASSES
-============================================ */
-.transition-default {
-  transition: all var(--duration-normal) var(--easing-spring);
-}
-
-.transition-fast {
-  transition: all var(--duration-fast) var(--easing-spring);
-}
-
-.transition-slow {
-  transition: all var(--duration-slow) var(--easing-spring);
+  transition: background-color var(--duration-normal) var(--easing-spring),
+              color var(--duration-normal) var(--easing-spring);
 }
 
 /* ============================================
@@ -182,7 +218,22 @@ body {
 ============================================ */
 @media (prefers-reduced-motion: reduce) {
   * {
-    transition: none !important;
-    animation: none !important;
+    transition-duration: var(--duration-instant) !important;
+    animation-duration: var(--duration-instant) !important;
+    animation-iteration-count: 1 !important;
   }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border-secondary: currentColor;
+    --color-border-tertiary: currentColor;
+  }
+}
+
+/* Focus-visible support */
+:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
 }
