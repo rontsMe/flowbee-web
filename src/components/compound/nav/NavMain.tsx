@@ -17,25 +17,41 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
 } from '@ui/sidebar';
-import { Icon, Icons } from '@icons';
+import { 
+  LayoutDashboard, 
+  Package, 
+  User, 
+  Kanban, 
+  ChevronRight 
+} from 'lucide-react';
 
 /**
  * NavMain Compound Component
  * 
  * Purpose: Main navigation utilizing globals.css primary theming
  * Features: Uses bg-primary and bg-secondary from globals.css for theming
+ * Structure: Tailwind for layout, globals.css for theming
  * 
  * Methods:
  * - getMenuButtonStyles(isActive): Returns Tailwind classes based on active state
  * - render(): Returns navigation JSX using globals.css theming
  */
+
+// Icon mapping
+const iconMap = {
+  'layout-dashboard': LayoutDashboard,
+  'package': Package,
+  'user': User,
+  'kanban': Kanban,
+};
+
 export function NavMain({
   items
 }: {
   items: {
     title: string;
     url: string;
-    icon?: Icon;
+    icon?: string;
     isActive?: boolean;
     items?: {
       title: string;
@@ -44,74 +60,28 @@ export function NavMain({
   }[];
 }) {
 
+  // ✅ CLEAN STYLES - Structure only, theming handled by globals.css
   const styles = {
-    group: "px-2",
+    group: "px-4",
     
-    groupLabel: `
-      text-xs font-semibold uppercase tracking-wider
-      text-primary
-      mb-2 px-2
-    `,
+    groupLabel: "text-xs font-semibold uppercase tracking-wider text-primary mb-6 px-2",
     
-    groupContent: "flex flex-col gap-2",
+    groupContent: "flex flex-col gap-2", // More spacing between items
     
-    menuButtonActive: `
-      bg-primary text-primary-foreground
-      hover:bg-primary/90 hover:text-primary-foreground 
-      active:bg-primary/90 active:text-primary-foreground
-      min-w-8 duration-300 ease-in-out
-      transition-all
-      backdrop-blur-sm
-      border border-transparent
-      shadow-sm
-      hover:shadow-md
-      hover:scale-105
-      active:scale-95
-    `,
+    // ✅ Clean button classes - consistent 40px height
+    menuButtonActive: "bg-primary text-primary-foreground h-10 w-full",
     
-    menuButtonInactive: `
-      bg-secondary/50 text-sidebar-foreground
-      hover:bg-accent hover:text-accent-foreground
-      border border-transparent
-      min-w-8 duration-300 ease-in-out
-      transition-all
-      backdrop-blur-sm
-      shadow-sm
-      hover:shadow-sm
-      hover:scale-102
-      active:scale-98
-    `,
+    menuButtonInactive: "bg-sidebar-accent text-sidebar-foreground h-10 w-full",
     
-    menuIcon: `
-      transition-all duration-300 
-      group-hover:scale-110
-    `,
+    menuIcon: "w-5 h-5", // Consistent icon size
     
     menuText: "font-medium",
     
-    chevron: `
-      ml-auto transition-all duration-300 ease-in-out
-      group-data-[state=open]/collapsible:rotate-90
-      group-data-[state=open]/collapsible:text-primary
-      hover:scale-110
-    `,
+    chevron: "ml-auto w-4 h-4 group-data-[state=open]/collapsible:rotate-90 transition-transform",
     
-    subMenu: `
-      bg-secondary/30
-      backdrop-blur-sm
-      border-l border-primary/20
-      ml-4 pl-4 mt-2
-      rounded-r-lg
-      shadow-sm
-    `,
+    subMenu: "bg-sidebar-accent ml-4 pl-4 mt-2 rounded-r-lg space-y-1",
     
-    subMenuButton: `
-      transition-all duration-200 ease-in-out
-      rounded-md
-      hover:bg-accent hover:text-accent-foreground
-      hover:translate-x-1
-      active:scale-95
-    `,
+    subMenuButton: "rounded-md h-8", // Smaller sub-items
     
     subMenuText: "text-sm"
   };
@@ -132,50 +102,58 @@ export function NavMain({
         Platform
       </SidebarGroupLabel>
       <SidebarGroupContent className={styles.groupContent}>
-        <SidebarMenu>
-          {items.map((item) => (
-            <Collapsible
-              key={item.title}
-              asChild
-              defaultOpen={item.isActive}
-              className='group/collapsible'
-            >
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton
-                    tooltip={item.title}
-                    className={getMenuButtonStyles(item.isActive)}
-                  >
-                    {item.icon && (
-                      <item.icon className={styles.menuIcon} />
-                    )}
-                    <span className={styles.menuText}>
-                      {item.title}
-                    </span>
-                    <Icons.chevronRight className={styles.chevron} />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <SidebarMenuSub className={styles.subMenu}>
-                    {item.items?.map((subItem) => (
-                      <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton 
-                          asChild
-                          className={styles.subMenuButton}
-                        >
-                          <a href={subItem.url}>
-                            <span className={styles.subMenuText}>
-                              {subItem.title}
-                            </span>
-                          </a>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </SidebarMenuItem>
-            </Collapsible>
-          ))}
+        <SidebarMenu className="space-y-2">
+          {items.map((item) => {
+            const IconComponent = item.icon ? iconMap[item.icon as keyof typeof iconMap] : null;
+            
+            return (
+              <Collapsible
+                key={item.title}
+                asChild
+                defaultOpen={item.isActive}
+                className='group/collapsible'
+              >
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className={getMenuButtonStyles(item.isActive)}
+                    >
+                      {IconComponent && (
+                        <IconComponent className={styles.menuIcon} />
+                      )}
+                      <span className={styles.menuText}>
+                        {item.title}
+                      </span>
+                      {item.items && item.items.length > 0 && (
+                        <ChevronRight className={styles.chevron} />
+                      )}
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  {item.items && item.items.length > 0 && (
+                    <CollapsibleContent>
+                      <SidebarMenuSub className={styles.subMenu}>
+                        {item.items.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton 
+                              asChild
+                              className={styles.subMenuButton}
+                            >
+                              <a href={subItem.url}>
+                                <span className={styles.subMenuText}>
+                                  {subItem.title}
+                                </span>
+                              </a>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  )}
+                </SidebarMenuItem>
+              </Collapsible>
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

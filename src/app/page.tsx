@@ -211,173 +211,179 @@ export default function DashboardPage() {
 
   return (
     <PageContainer>
-      <div className={styles.container}>
-        
-        {/* ✅ NEW ARCHITECTURE - System Overview Section */}
-        <SystemMetricCard 
-          title="System Overview"
-          columns={{ default: 4, md: 2, lg: 4, xl: 4 }}
-        >
-          {/* CPU Metric Card */}
-          <MetricCard
-            title="CPU Usage"
-            value={getLatestValue(systemData.cpu, '59')}
-            unit="%"
-            spec="AMD 4-core processor"
-            timeRange={timeRanges.cpu}
-            onTimeRangeChange={(range) => handleTimeRangeChange('cpu', range)}
-            
-            // ✅ Parent controls chart configuration
-            chartType="line"
-            data={systemData.cpu}
-            color={chartColors.cpu}
-            opacity={chartOpacity.cpu}
-            showGrid={true}
-            showYAxis={true}
-            showXAxis={true}
-          />
-
-          {/* Memory Metric Card */}
-          <MetricCard
-            title="Memory Usage"
-            value={getLatestValue(systemData.memory, '41')}
-            unit="%"
-            spec="32 GB RAM"
-            timeRange={timeRanges.memory}
-            onTimeRangeChange={(range) => handleTimeRangeChange('memory', range)}
-            
-            chartType="area"
-            data={systemData.memory}
-            color={chartColors.memory}
-            opacity={chartOpacity.memory}
-            showGrid={true}                    // No grid for area chart
-            showYAxis={true}
-            showXAxis={false}                   // No X-axis for memory
-          />
-
-          {/* GPU Metric Card */}
-          <MetricCard
-            title="GPU Usage"
-            value={getLatestValue(systemData.gpu, '14')}
-            unit="%"
-            spec="NVIDIA GPU"
-            timeRange={timeRanges.gpu}
-            onTimeRangeChange={(range) => handleTimeRangeChange('gpu', range)}
-            
-            chartType="line"
-            data={systemData.gpu}
-            color={chartColors.gpu}
-            opacity={chartOpacity.gpu}
-            showGrid={true}
-            showYAxis={true}
-            showXAxis={true}
-          />
-
-          {/* Disk Metric Card */}
-          <MetricCard
-            title="Disk Usage"
-            value={getLatestValue(systemData.disk, '73')}
-            unit="%"
-            spec="1TB NVMe SSD"
-            timeRange={timeRanges.disk}
-            onTimeRangeChange={(range) => handleTimeRangeChange('disk', range)}
-            
-            chartType="area"
-            data={systemData.disk}
-            color={chartColors.disk}
-            opacity={chartOpacity.disk}
-            showGrid={true}
-            showYAxis={true}
-            showXAxis={true}
-          />
-        </SystemMetricCard>
-
-        {/* ✅ NEW ARCHITECTURE - Processing Overview Section */}
-        {/* TODO: Success badge can be added to SystemMetricCard header or as separate element */}
-        {/* 
-        <Badge variant="secondary" className={styles.successBadge}>
-          <div className={styles.successDot}></div>
-          <span className={styles.successText}>
-            Success/failure {processingStats.successRate.toFixed(1)}% {processingStats.successCount}/{processingStats.failureCount}
-          </span>
-        </Badge>
-        */}
-        
-        <SystemMetricCard 
-          title="Processing Overview"
-          columns={{ default: 4, md: 2, lg: 4, xl: 4 }}
-        >
-
-          {/* Executions per Minute */}
-          <MetricCard
-            title="Executions per Minute"
-            value={getLatestValue(processingData.executions, '796')}
-            unit="/min"
-            timeRange={timeRanges.executions}
-            onTimeRangeChange={(range) => handleTimeRangeChange('executions', range)}
-            
-            chartType="bar"
-            data={processingData.executions}
-            color={chartColors.executions}
-            opacity={chartOpacity.executions}
-            showGrid={true}
-            showYAxis={true}
-            showXAxis={true}
-          />
-
-          {/* Average Method Duration */}
-          <MetricCard
-            title="Average Method Duration"
-            value={getLatestValue(processingData.duration, '263')}
-            unit="ms"
-            timeRange={timeRanges.duration}
-            onTimeRangeChange={(range) => handleTimeRangeChange('duration', range)}
-            
-            chartType="area"
-            data={processingData.duration}
-            color={chartColors.duration}
-            opacity={chartOpacity.duration}
-            showGrid={true}
-            showYAxis={true}
-            showXAxis={true}
-          />
-
-          {/* Queue Size */}
-          <MetricCard
-            title="Queue Size"
-            value={getLatestValue(processingData.queue, '21')}
-            unit=" items"
-            timeRange={timeRanges.queue}
-            onTimeRangeChange={(range) => handleTimeRangeChange('queue', range)}
-            
-            chartType="area"
-            data={processingData.queue}
-            color={chartColors.queue}
-            opacity={chartOpacity.queue}
-            showGrid={true}
-            showYAxis={true}
-            showXAxis={true}
-          />
-
-          {/* Concurrency Level */}
-          <MetricCard
-            title="Concurrency Level"
-            value={getLatestValue(processingData.concurrency, '6')}
-            unit=""
-            timeRange={timeRanges.concurrency}
-            onTimeRangeChange={(range) => handleTimeRangeChange('concurrency', range)}
-            
-            chartType="line"
-            data={processingData.concurrency}
-            color={chartColors.concurrency}
-            opacity={chartOpacity.concurrency}
-            showGrid={true}
-            showYAxis={true}
-            showXAxis={true}
-          />
-        </SystemMetricCard>
-
-      </div>
+      <h1>Hello</h1>
     </PageContainer>
   );
 }
+
+
+
+// const metricCardsComponent = () => (
+//   <div className={styles.container}>
+        
+//         {/* ✅ NEW ARCHITECTURE - System Overview Section */}
+//         <SystemMetricCard 
+//           title="System Overview"
+//           columns={{ default: 4, md: 2, lg: 4, xl: 4 }}
+//         >
+//           {/* CPU Metric Card */}
+//           <MetricCard
+//             title="CPU Usage"
+//             value={getLatestValue(systemData.cpu, '59')}
+//             unit="%"
+//             spec="AMD 4-core processor"
+//             timeRange={timeRanges.cpu}
+//             onTimeRangeChange={(range) => handleTimeRangeChange('cpu', range)}
+            
+//             // ✅ Parent controls chart configuration
+//             chartType="line"
+//             data={systemData.cpu}
+//             color={chartColors.cpu}
+//             opacity={chartOpacity.cpu}
+//             showGrid={true}
+//             showYAxis={true}
+//             showXAxis={true}
+//           />
+
+//           {/* Memory Metric Card */}
+//           <MetricCard
+//             title="Memory Usage"
+//             value={getLatestValue(systemData.memory, '41')}
+//             unit="%"
+//             spec="32 GB RAM"
+//             timeRange={timeRanges.memory}
+//             onTimeRangeChange={(range) => handleTimeRangeChange('memory', range)}
+            
+//             chartType="area"
+//             data={systemData.memory}
+//             color={chartColors.memory}
+//             opacity={chartOpacity.memory}
+//             showGrid={true}                    // No grid for area chart
+//             showYAxis={true}
+//             showXAxis={false}                   // No X-axis for memory
+//           />
+
+//           {/* GPU Metric Card */}
+//           <MetricCard
+//             title="GPU Usage"
+//             value={getLatestValue(systemData.gpu, '14')}
+//             unit="%"
+//             spec="NVIDIA GPU"
+//             timeRange={timeRanges.gpu}
+//             onTimeRangeChange={(range) => handleTimeRangeChange('gpu', range)}
+            
+//             chartType="line"
+//             data={systemData.gpu}
+//             color={chartColors.gpu}
+//             opacity={chartOpacity.gpu}
+//             showGrid={true}
+//             showYAxis={true}
+//             showXAxis={true}
+//           />
+
+//           {/* Disk Metric Card */}
+//           <MetricCard
+//             title="Disk Usage"
+//             value={getLatestValue(systemData.disk, '73')}
+//             unit="%"
+//             spec="1TB NVMe SSD"
+//             timeRange={timeRanges.disk}
+//             onTimeRangeChange={(range) => handleTimeRangeChange('disk', range)}
+            
+//             chartType="area"
+//             data={systemData.disk}
+//             color={chartColors.disk}
+//             opacity={chartOpacity.disk}
+//             showGrid={true}
+//             showYAxis={true}
+//             showXAxis={true}
+//           />
+//         </SystemMetricCard>
+
+//         {/* ✅ NEW ARCHITECTURE - Processing Overview Section */}
+//         {/* TODO: Success badge can be added to SystemMetricCard header or as separate element */}
+//         {/* 
+//         <Badge variant="secondary" className={styles.successBadge}>
+//           <div className={styles.successDot}></div>
+//           <span className={styles.successText}>
+//             Success/failure {processingStats.successRate.toFixed(1)}% {processingStats.successCount}/{processingStats.failureCount}
+//           </span>
+//         </Badge>
+//         */}
+        
+//         <SystemMetricCard 
+//           title="Processing Overview"
+//           columns={{ default: 4, md: 2, lg: 4, xl: 4 }}
+//         >
+
+//           {/* Executions per Minute */}
+//           <MetricCard
+//             title="Executions per Minute"
+//             value={getLatestValue(processingData.executions, '796')}
+//             unit="/min"
+//             timeRange={timeRanges.executions}
+//             onTimeRangeChange={(range) => handleTimeRangeChange('executions', range)}
+            
+//             chartType="bar"
+//             data={processingData.executions}
+//             color={chartColors.executions}
+//             opacity={chartOpacity.executions}
+//             showGrid={true}
+//             showYAxis={true}
+//             showXAxis={true}
+//           />
+
+//           {/* Average Method Duration */}
+//           <MetricCard
+//             title="Average Method Duration"
+//             value={getLatestValue(processingData.duration, '263')}
+//             unit="ms"
+//             timeRange={timeRanges.duration}
+//             onTimeRangeChange={(range) => handleTimeRangeChange('duration', range)}
+            
+//             chartType="area"
+//             data={processingData.duration}
+//             color={chartColors.duration}
+//             opacity={chartOpacity.duration}
+//             showGrid={true}
+//             showYAxis={true}
+//             showXAxis={true}
+//           />
+
+//           {/* Queue Size */}
+//           <MetricCard
+//             title="Queue Size"
+//             value={getLatestValue(processingData.queue, '21')}
+//             unit=" items"
+//             timeRange={timeRanges.queue}
+//             onTimeRangeChange={(range) => handleTimeRangeChange('queue', range)}
+            
+//             chartType="area"
+//             data={processingData.queue}
+//             color={chartColors.queue}
+//             opacity={chartOpacity.queue}
+//             showGrid={true}
+//             showYAxis={true}
+//             showXAxis={true}
+//           />
+
+//           {/* Concurrency Level */}
+//           <MetricCard
+//             title="Concurrency Level"
+//             value={getLatestValue(processingData.concurrency, '6')}
+//             unit=""
+//             timeRange={timeRanges.concurrency}
+//             onTimeRangeChange={(range) => handleTimeRangeChange('concurrency', range)}
+            
+//             chartType="line"
+//             data={processingData.concurrency}
+//             color={chartColors.concurrency}
+//             opacity={chartOpacity.concurrency}
+//             showGrid={true}
+//             showYAxis={true}
+//             showXAxis={true}
+//           />
+//         </SystemMetricCard>
+
+//       </div>
+// )

@@ -1,0 +1,175 @@
+/* File: /styles/globals.css */
+
+/* ============================================
+   🎯 FOUNDATIONAL DESIGN TOKENS
+   Base tokens extracted from React components
+   ============================================ */
+
+
+   :root {
+    /* 🎯 BASE COLOR TOKENS - EXACT React Component Colors */
+    --spacing: 0.25rem;        /* Base spacing unit (4px) */
+    --font-size: 1rem;         /* Base font size */
+    --line-height: 1.5;        /* Base line height */
+    --font-weight: 400;        /* Base font weight */
+    --border-radius: 0.25rem;  /* Base border radius */
+    
+    /* Dark Theme Base Colors - Exact Hex Values */
+    --color-dark-100: #1f2937;    /* Main backgrounds */
+    --color-dark-200: #1a1f2e;    /* Secondary backgrounds - EXACT */
+    --color-dark-300: #151a26;    /* Deeper backgrounds - EXACT */
+    --color-dark-400: #252a3a;    /* Interactive surfaces - EXACT */
+    --color-dark-500: #1f242f;    /* Hover states - EXACT */
+    --color-dark-600: #2a2f3e;    /* Borders - EXACT */
+    
+    /* Text Colors - Exact React Component Values */
+    --color-text-primary: #f4f4f5;     /* Primary text - EXACT */
+    --color-text-secondary: #d1d5db;   /* Secondary text - EXACT */
+    --color-text-tertiary: #9ca3af;    /* Tertiary text */
+    --color-text-muted: #a8a9aa;       /* Muted/inactive text - EXACT */
+    
+    /* Brand Colors - Exact React Component Values */
+    --color-brand-primary: #4f6dc7;    /* Main brand color - EXACT */
+    --color-brand-light: #5a7bd1;      /* Brand light variant */
+    --color-brand-dark: #3d5aa3;       /* Brand dark variant */
+    
+    /* Interactive Colors - Exact React Component Values */
+    --color-interactive-primary: #4f6dc7;           /* Main interactive - EXACT */
+    --color-interactive-primary-hover: #5a7bd1;     /* Interactive hover */
+    --color-interactive-primary-text: #f4f4f5;      /* Text on interactive - EXACT */
+    --color-interactive-secondary-text: #f4f4f5;    /* Text on secondary - EXACT */
+    
+    /* Border Colors - Exact React Component Values */
+    --color-border-primary: #2a2f3e;               /* Main borders - EXACT */
+    --color-border-secondary: #2a2f3e;             /* Secondary borders - EXACT */
+    --color-border-focus: #4f6dc7;                 /* Focus borders - EXACT */
+    
+    /* 🎯 TYPOGRAPHY TOKENS */
+    --font-family-sans: 'Geist Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-family-mono: 'Geist Mono', 'SF Mono', monospace;
+    
+    --font-size-xs: 0.75rem;      /* 12px */
+    --font-size-sm: 0.875rem;     /* 14px */
+    --font-size-base: 1rem;       /* 16px */
+    --font-size-lg: 1.125rem;     /* 18px */
+    --font-size-xl: 1.25rem;      /* 20px */
+    
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+    
+    /* 🎯 SPACING TOKENS */
+    --spacing-0: 0;
+    --spacing-1: 0.25rem;    /* 4px */
+    --spacing-2: 0.5rem;     /* 8px */
+    --spacing-3: 0.75rem;    /* 12px */
+    --spacing-4: 1rem;       /* 16px */
+    --spacing-5: 1.25rem;    /* 20px */
+    --spacing-6: 1.5rem;     /* 24px */
+    --spacing-8: 2rem;       /* 32px */
+    --spacing-10: 2.5rem;    /* 40px */
+    --spacing-12: 3rem;      /* 48px */
+    --spacing-16: 4rem;      /* 64px */
+    
+    /* Semantic spacing aliases */
+    --spacing-xs: var(--spacing-1);   /* 4px */
+    --spacing-sm: var(--spacing-2);   /* 8px */
+    --spacing-md: var(--spacing-3);   /* 12px */
+    --spacing-lg: var(--spacing-4);   /* 16px */
+    --spacing-xl: var(--spacing-6);   /* 24px */
+    --spacing-2xl: var(--spacing-8);  /* 32px */
+    
+    /* 🎯 SIZE TOKENS */
+    --size-4: 1rem;          /* 16px */
+    --size-5: 1.25rem;       /* 20px */
+    --size-6: 1.5rem;        /* 24px */
+    --size-8: 2rem;          /* 32px */
+    --size-10: 2.5rem;       /* 40px */
+    --size-12: 3rem;         /* 48px */
+    --size-16: 4rem;         /* 64px */
+    
+    /* Component Sizes */
+    --size-button-md: 2.5rem;     /* 40px */
+    --size-icon-md: 1.25rem;      /* 20px */
+    --size-2xl: 4rem;             /* 64px */
+    
+    /* Semantic size aliases */
+    --size-xs: var(--size-4);     /* 16px */
+    --size-sm: var(--size-6);     /* 24px */
+    --size-md: var(--size-8);     /* 32px */
+    --size-lg: var(--size-10);    /* 40px */
+    --size-xl: var(--size-12);    /* 48px */
+    
+    /* 🎯 BORDER RADIUS TOKENS */
+    --radius-none: 0;
+    --radius-sm: 0.25rem;     /* 4px */
+    --radius-md: 0.5rem;      /* 8px */
+    --radius-lg: 0.75rem;     /* 12px */
+    --radius-xl: 1rem;        /* 16px */
+    --radius-full: 9999px;    /* Full round */
+    
+    /* 🎯 TRANSITION TOKENS */
+    --duration-fast: 150ms;
+    --duration-normal: 200ms;
+    --duration-slow: 300ms;
+    
+    --easing-ease: ease;
+    --easing-ease-in-out: ease-in-out;
+    --easing-spring: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* 🎯 Z-INDEX TOKENS */
+    --z-base: 0;
+    --z-raised: 10;
+    --z-dropdown: 100;
+    --z-modal: 400;
+    --z-max: 9999;
+  }
+  
+  /* ============================================
+     BASE STYLES
+     ============================================ */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-primary);
+    background-color: var(--color-dark-100);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* ============================================
+     UTILITY CLASSES
+     ============================================ */
+  .transition-default {
+    transition: all var(--duration-normal) var(--easing-spring);
+  }
+  
+  .transition-fast {
+    transition: all var(--duration-fast) var(--easing-spring);
+  }
+  
+  .transition-slow {
+    transition: all var(--duration-slow) var(--easing-spring);
+  }
+  
+  /* ============================================
+     ACCESSIBILITY
+     ============================================ */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }

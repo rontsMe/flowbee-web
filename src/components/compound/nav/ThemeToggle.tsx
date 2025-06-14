@@ -1,21 +1,22 @@
 // src/components/compound/nav/ThemeToggle.tsx
 'use client';
 
-import { IconBrightness } from '@tabler/icons-react';
+import { Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState, useCallback } from 'react';
 import { Button } from '@ui/button';
 
 /**
- * Enhanced ModeToggle Component - Fixed Hook Order
+ * Enhanced ModeToggle Component
  * 
- * Purpose: Theme toggle utilizing globals.css secondary theming
- * Features: Uses bg-secondary and enhanced hover states from globals.css
+ * Purpose: Theme toggle utilizing globals.css sidebar theming
+ * Features: Uses sidebar colors from globals.css to match header and sidebar
+ * Structure: Tailwind for layout, globals.css for theming
  * Follows: Rules of Hooks - All hooks called in same order every render
  * 
  * Methods:
  * - handleThemeToggle(): Theme switching with view transitions
- * - render(): Returns toggle button JSX using globals.css theming
+ * - render(): Returns toggle button JSX using globals.css sidebar theming
  */
 export function ModeToggle() {
   // ✅ ALL HOOKS FIRST - Called in same order every render
@@ -32,15 +33,6 @@ export function ModeToggle() {
     (e?: React.MouseEvent) => {
       const newMode = resolvedTheme === 'dark' ? 'light' : 'dark';
       const root = document.documentElement;
-
-      // Add glow effect during transition (globals.css handles the actual glow styling)
-      const button = e?.currentTarget as HTMLElement;
-      if (button) {
-        button.classList.add('shadow-lg', 'shadow-primary/50');
-        setTimeout(() => {
-          button.classList.remove('shadow-lg', 'shadow-primary/50');
-        }, 600);
-      }
 
       if (!document.startViewTransition) {
         setTheme(newMode);
@@ -65,40 +57,13 @@ export function ModeToggle() {
     [resolvedTheme, setTheme]
   );
 
-  // ✅ Styles definition (not a hook, can be anywhere)
+  // ✅ CLEAN STYLES - Structure only, theming handled by globals.css
   const styles = {
-    toggleButton: `
-      group/toggle size-8
-      bg-secondary
-      backdrop-blur-sm backdrop-saturate-110
-      border border-border/50
-      shadow-sm
-      transition-all duration-300 ease-in-out
-      hover:shadow-md
-      hover:bg-accent hover:text-accent-foreground
-      hover:scale-110
-      focus:shadow-lg
-      focus:bg-accent focus:text-accent-foreground
-      focus:scale-105
-      active:scale-95
-    `,
+    toggleButton: "size-8 bg-sidebar-accent text-sidebar-foreground",
     
-    icon: `
-      h-4 w-4
-      transition-all duration-500 ease-in-out
-      group-hover/toggle:text-primary
-      group-hover/toggle:rotate-180
-      group-hover/toggle:scale-110
-      group-focus/toggle:text-primary
-      group-focus/toggle:rotate-180
-      group-focus/toggle:scale-115
-      group-active/toggle:rotate-90
-    `,
+    icon: "h-4 w-4",
     
-    screenReader: `
-      sr-only
-      transition-all duration-300
-    `
+    screenReader: "sr-only"
   };
 
   // ✅ CONDITIONAL RENDERING - After all hooks
@@ -110,7 +75,7 @@ export function ModeToggle() {
         className={styles.toggleButton}
         disabled
       >
-        <IconBrightness className={styles.icon} />
+        <Sun className={styles.icon} />
         <span className={styles.screenReader}>Loading theme...</span>
       </Button>
     );
@@ -124,7 +89,7 @@ export function ModeToggle() {
       onClick={handleThemeToggle}
       title={`Switch to ${resolvedTheme === 'dark' ? 'light' : 'dark'} mode`}
     >
-      <IconBrightness className={styles.icon} />
+      {resolvedTheme === 'dark' ? <Sun className={styles.icon} /> : <Moon className={styles.icon} />}
       <span className={styles.screenReader}>Toggle theme</span>
     </Button>
   );

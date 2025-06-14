@@ -1,4 +1,4 @@
-import { NavUser } from './NavUser';
+
 // src/components/compound/nav/index.ts
 
 /**

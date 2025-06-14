@@ -12,26 +12,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@ui/dropdown-menu';
-import { Icons } from '@icons';
+import { User, CreditCard, Settings, LogOut } from 'lucide-react';
 
 /**
  * Enhanced NavUser Component
  *
- * Purpose: User navigation dropdown utilizing globals.css card theming
- * Features: Uses bg-card and bg-popover from globals.css for glass-morphism
+ * Purpose: User navigation dropdown utilizing globals.css sidebar theming
+ * Features: Uses sidebar colors from globals.css to match header and sidebar
+ * Structure: Tailwind for layout, globals.css for theming
  * 
  * Methods:
- * - render(): Returns dropdown JSX using globals.css theming system
+ * - render(): Returns dropdown JSX using globals.css sidebar theming system
  */
 
-interface User {
+interface UserType {
   name: string;
   email: string;
   avatar: string;
 }
 
 interface NavUserProps {
-  user?: User;
+  user?: UserType;
 }
 
 export function NavUser({ user }: NavUserProps = {}) {
@@ -46,89 +47,29 @@ export function NavUser({ user }: NavUserProps = {}) {
   const userData = user || defaultUser;
   const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase();
 
+  // ✅ CLEAN STYLES - Structure only, theming handled by globals.css
   const styles = {
-    trigger: `
-      relative h-10 w-10 rounded-full
-      bg-card/50
-      backdrop-blur-sm
-      border border-border/50
-      shadow-sm
-      transition-all duration-300 ease-in-out
-      hover:shadow-md
-      hover:scale-105
-      hover:bg-accent
-      active:scale-95
-    `,
+    trigger: "h-10 w-10 rounded-full bg-sidebar-accent",
     
-    avatar: `
-      h-8 w-8
-      transition-all duration-300 ease-in-out
-      ring-2 ring-primary/30
-      shadow-sm
-      hover:ring-primary/50
-      hover:shadow-md
-      hover:scale-110
-    `,
+    avatar: "h-8 w-8",
     
-    avatarFallback: `
-      bg-primary text-primary-foreground 
-      font-semibold
-    `,
+    avatarFallback: "bg-sidebar-primary text-sidebar-primary-foreground font-semibold",
     
-    dropdownContent: `
-      w-56 p-2
-      bg-popover
-      border border-border/50
-      shadow-xl
-      rounded-xl
-    `,
+    dropdownContent: "w-56 p-2 bg-popover rounded-xl",
     
-    userLabel: `
-      font-normal p-3 rounded-lg
-      bg-secondary/30
-      border border-border/30
-      backdrop-blur-sm
-    `,
+    userLabel: "font-normal p-3 rounded-lg bg-secondary",
     
-    userName: `
-      text-sm leading-none font-semibold 
-      text-foreground
-    `,
+    userName: "text-sm leading-none font-semibold text-foreground",
     
-    userEmail: `
-      text-muted-foreground text-xs leading-none
-    `,
+    userEmail: "text-muted-foreground text-xs leading-none",
     
-    separator: `
-      bg-border/50 opacity-50 my-1
-    `,
+    separator: "bg-border my-1",
     
-    menuItem: `
-      rounded-lg px-3 py-2
-      transition-all duration-200 ease-in-out
-      hover:bg-accent hover:text-accent-foreground
-      hover:scale-102
-      active:scale-98
-      focus:bg-accent focus:text-accent-foreground
-      group
-    `,
+    menuItem: "rounded-lg px-3 py-2 group",
     
-    menuItemDestructive: `
-      rounded-lg px-3 py-2
-      transition-all duration-200 ease-in-out
-      hover:bg-destructive hover:text-destructive-foreground
-      hover:scale-102
-      active:scale-98
-      focus:bg-destructive focus:text-destructive-foreground
-      group
-      text-destructive
-    `,
+    menuItemDestructive: "rounded-lg px-3 py-2 group text-destructive",
     
-    icon: `
-      mr-2 h-4 w-4
-      transition-all duration-200
-      group-hover:scale-110
-    `
+    icon: "mr-2 h-4 w-4"
   };
 
   return (
@@ -164,15 +105,15 @@ export function NavUser({ user }: NavUserProps = {}) {
         
         <DropdownMenuGroup>
           <DropdownMenuItem className={styles.menuItem}>
-            <Icons.user className={styles.icon} />
+            <User className={styles.icon} />
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem className={styles.menuItem}>
-            <Icons.billing className={styles.icon} />
+            <CreditCard className={styles.icon} />
             Billing
           </DropdownMenuItem>
           <DropdownMenuItem className={styles.menuItem}>
-            <Icons.settings className={styles.icon} />
+            <Settings className={styles.icon} />
             Settings
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -180,7 +121,7 @@ export function NavUser({ user }: NavUserProps = {}) {
         <DropdownMenuSeparator className={styles.separator} />
         
         <DropdownMenuItem className={styles.menuItemDestructive}>
-          <Icons.logout className={styles.icon} />
+          <LogOut className={styles.icon} />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

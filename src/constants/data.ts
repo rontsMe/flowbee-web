@@ -1,15 +1,18 @@
-import { NavItem } from '@/types';
 
-export type Product = {
-  photo_url: string;
-  name: string;
-  description: string;
-  created_at: string;
-  price: number;
-  id: number;
-  category: string;
-  updated_at: string;
-};
+
+export interface NavItem {
+  title: string;
+  url: string;
+  icon?: string; // Lucide icon name
+  isActive: boolean;
+  shortcut?: string[]; // Array of strings for keyboard shortcuts
+  items?: {
+    title: string;
+    url: string;
+  }[];
+}
+
+
 
 //Info: The following data is used for the sidebar navigation and Cmd K bar.
 export const navItems: NavItem[] = [
@@ -41,6 +44,7 @@ export const navItems: NavItem[] = [
         url: '/dashboard/profile',
         icon: 'userPen',
         shortcut: ['m', 'm']
+
       },
       {
         title: 'Login',

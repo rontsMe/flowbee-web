@@ -3,14 +3,19 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./globals1.css";
 
 // Theme imports
 import ThemeProvider from "@layout/ThemeProvider";
 import { ThemeConfig, HydrationConfig } from '@themeTypes';
 
-// Navigation imports
-import { AppSidebar, Header } from '@compound/nav';
-import { SidebarProvider, SidebarInset } from '@ui/sidebar';
+// Navigation imports - UPDATED
+import { AppSidebar } from '@compound/nav'; // Your custom AppSidebar
+import { SidebarProvider } from '@ui/sidebar'; // Keep for other components
+import { Breadcrumbs } from '@compound/nav';
+
+// Header without breadcrumbs
+// import HeaderWithoutBreadcrumbs from './HeaderWithoutBreadcrumbs';
 
 // KBar import
 import KBar from '@components/kbar';
@@ -31,9 +36,10 @@ export const metadata: Metadata = {
 };
 
 /**
- * RootLayout Component with Navigation Integration + KBar
- * Purpose: Main layout with hydration-safe theme handling + navigation structure + search (SRP)
- * Features: Sidebar navigation, header, theme provider, hydration safety, KBar search
+ * RootLayout Component - Simple Flex Layout
+ * Purpose: Main layout with hydration-safe theme handling + simple navigation structure
+ * Features: Custom sidebar, header, theme provider, hydration safety, KBar search
+ * Architecture: Pure flex layout without shadcn/ui sidebar wrappers
  * Follows: SOLID - Single responsibility for layout structure
  * 
  * @param children React.ReactNode - Page components to render
@@ -80,26 +86,36 @@ export default function RootLayout({
           defaultTheme={themeConfig.defaultTheme}
           enableSystem={themeConfig.enableSystem}
         >
-          {/* ✅ KBar Provider - Wraps everything for search functionality */}
+          {/* KBar Provider - Wraps everything for search functionality */}
           <KBar>
-            {/* Navigation Layout Structure */}
-            <SidebarProvider>
-              {/* App Sidebar - Navigation Menu */}
-              <AppSidebar />
-              
-              {/* Main Content Area */}
-              <SidebarInset>
-                {/* Header - Breadcrumbs, Search, User Menu, Theme Toggle */}
-                <Header />
+            {/* Minimal SidebarProvider - Just for components that need useSidebar */}
+              {/* Simple Flex Layout - No SidebarInset wrapper */}
+              <div className="flex h-screen">
                 
-                {/* Page Content */}
-                <main >
-                  <div className="h-full overflow-auto">
-                    {children}
+                {/* Custom AppSidebar - Your React component match */}
+                <AppSidebar />
+                
+                {/* Main Content Area */}
+                <main className="flex-1 overflow-auto">
+                  {/* Header - Search, User Menu, Theme Toggle (NO breadcrumbs) */}
+                  {/* <HeaderWithoutBreadcrumbs /> */}
+                  
+                  {/* Main Content with Breadcrumbs */}
+                  <div className="h-full">
+                    {/* Breadcrumbs moved to content area */}
+                    {/* <div className="px-6 py-3">
+                      <Breadcrumbs />
+                    </div> */}
+                    
+                    {/* Page Content */}
+                    <div className="px-6 pb-6">
+                      {children}
+                    </div>
                   </div>
                 </main>
-              </SidebarInset>
-            </SidebarProvider>
+                
+              </div>
+            {/* </SidebarProvider> */}
           </KBar>
         </ThemeProvider>
       </body>

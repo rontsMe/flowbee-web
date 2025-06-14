@@ -7,82 +7,28 @@ import { Button } from '@ui/button';
 /**
  * Enhanced Breadcrumbs Component
  * 
- * Purpose: Navigation breadcrumbs utilizing globals.css card theming
- * Features: Uses bg-card and bg-secondary from globals.css for glass-morphism
+ * Purpose: Navigation breadcrumbs utilizing globals.css sidebar theming
+ * Features: Uses bg-sidebar-accent and sidebar colors from globals.css to match header
+ * Structure: Tailwind for layout, globals.css for theming
  * 
  * Methods:
  * - getBreadcrumbStyles(isLast): Returns Tailwind classes for breadcrumb items
- * - render(): Returns breadcrumbs JSX using globals.css theming system
+ * - render(): Returns breadcrumbs JSX using globals.css sidebar theming system
  */
 export function Breadcrumbs() {
   const pathname = usePathname();
   
+  // ✅ CLEAN STYLES - Structure only, theming handled by globals.css
   const styles = {
-    container: `
-      flex items-center space-x-1 text-sm
-      p-2 rounded-lg
-      bg-card/20
-      backdrop-blur-sm
-      border border-border/20
-      shadow-sm
-      transition-all duration-300 ease-in-out
-      hover:shadow-md
-      hover:bg-card/40
-      hover:border-border/30
-    `,
+    container: "flex items-center space-x-1 text-sm p-2 rounded-lg bg-sidebar-accent",
     
-    breadcrumbItem: `
-      flex items-center
-      transition-all duration-200 ease-in-out
-      hover:scale-102
-    `,
+    breadcrumbItem: "flex items-center",
     
-    breadcrumbActive: `
-      h-auto p-0 px-2 py-1 rounded-md
-      transition-all duration-300 ease-in-out
-      backdrop-blur-sm
-      border border-transparent
-      shadow-sm
-      text-sm font-semibold
-      text-primary
-      bg-primary/10
-      border-primary/20
-      shadow-primary/10
-      hover:shadow-md hover:shadow-primary/20
-      hover:scale-105
-      hover:bg-primary/15
-      hover:border-primary/30
-      active:scale-95
-    `,
+    breadcrumbActive: "h-auto p-0 px-2 py-1 rounded-md text-sm font-semibold text-sidebar-primary bg-sidebar-primary",
     
-    breadcrumbInactive: `
-      h-auto p-0 px-2 py-1 rounded-md
-      transition-all duration-300 ease-in-out
-      backdrop-blur-sm
-      border border-transparent
-      shadow-sm
-      text-sm font-medium
-      text-muted-foreground
-      bg-secondary/30
-      hover:text-foreground
-      hover:bg-secondary/60
-      hover:border-border/30
-      hover:shadow-sm
-      hover:scale-102
-      hover:text-primary
-      active:scale-98
-    `,
+    breadcrumbInactive: "h-auto p-0 px-2 py-1 rounded-md text-sm font-medium text-sidebar-foreground bg-sidebar-accent",
     
-    separator: `
-      text-muted-foreground mx-2 
-      transition-all duration-300 ease-in-out
-      opacity-60
-      hover:opacity-100
-      hover:text-primary
-      hover:scale-110
-      select-none
-      font-light
-    `
+    separator: "text-sidebar-foreground mx-2 opacity-60 select-none font-light"
   };
 
   /**

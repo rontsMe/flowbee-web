@@ -1,0 +1,275 @@
+/* ============================================
+   SIDEBAR LAYOUT
+============================================ */
+.sidebar {
+  --sidebar-bg: var(--color-dark-200);
+  --sidebar-hover: var(--color-dark-500);
+  --sidebar-active: var(--color-dark-400);
+  --sidebar-text-muted: var(--color-text-muted);
+  --sidebar-text-active: var(--color-text-primary);
+  --sidebar-border: var(--color-dark-600);
+
+  width: 16rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  box-shadow: var(--shadow-lg);
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text-active);
+  border-right: 1px solid var(--sidebar-border);
+  transition: width var(--duration-slow) var(--easing-spring);
+  overflow: hidden;
+}
+.topSection {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.bottomSection {
+  display: flex;
+  flex-direction: column;
+}
+/* Collapsed State */
+.sidebarCollapsed {
+  width: 5.5rem;
+}
+
+.sidebarCollapsed .platformLabel {
+  display: none;
+}
+
+.sidebarCollapsed .menuItem {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+  gap:0;
+}
+
+.sidebarCollapsed .menuItem span:last-child {
+  opacity: 0;
+  transform: scaleX(0.7);
+  pointer-events: none;
+  width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarCollapsed .logoBox {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sidebarCollapsed .toggleButton svg {
+  transform: rotate(180deg);
+}
+
+.sidebarCollapsed .settingsSection span:last-child,
+.sidebarCollapsed .userSection .userInfo {
+  opacity: 0;
+  transform: scaleX(0.7);
+  width: 0;
+  pointer-events: none;
+  display: inline-block;
+}
+
+/* ============================================
+   PLATFORM HEADER SECTION
+============================================ */
+.platformHeader {
+  height: var(--size-12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-4);
+  border-bottom: 1px solid var(--sidebar-border);
+}
+
+.logoAndTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.logoBox {
+  width: var(--size-8);
+  height: var(--size-8);
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-dark));
+  color: var(--sidebar-text-active);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+}
+
+.platformLabel {
+  color: var(--color-brand-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.toggleButton {
+  background: transparent;
+  border: none;
+  color: var(--sidebar-text-muted);
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  transition:
+    background var(--duration-fast) var(--easing-spring),
+    transform var(--duration-normal) var(--easing-spring);
+}
+
+.toggleButton:hover {
+  background: var(--sidebar-hover);
+  color: var(--sidebar-text-active);
+}
+
+.toggleButton svg {
+  transition: transform var(--duration-normal) var(--easing-spring);
+}
+
+/* ============================================
+   NAVIGATION AREA
+============================================ */
+.nav {
+  flex: 1;
+  padding: var(--spacing-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.menuItem {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  text-align: left;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--sidebar-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--duration-normal) var(--easing-spring),
+    color var(--duration-normal) var(--easing-spring),
+    opacity var(--duration-normal) var(--easing-spring),
+    transform var(--duration-normal) var(--easing-spring);
+}
+
+.menuItem:hover {
+  background: var(--sidebar-hover);
+  color: var(--sidebar-text-active);
+}
+
+.menuItemActive {
+  background: var(--sidebar-active);
+  color: var(--sidebar-text-active);
+}
+
+.menuItemActive:hover {
+  background: var(--sidebar-active);
+  color: var(--sidebar-text-active);
+}
+
+/* ✨ Animated label collapse + stagger */
+.menuItem span:last-child {
+  transition:
+    opacity var(--duration-normal) var(--easing-spring),
+    transform var(--duration-normal) var(--easing-spring);
+  transform-origin: left;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* Staggered transition delays */
+.menuItem:nth-child(1) span:last-child { transition-delay: 0ms; }
+.menuItem:nth-child(2) span:last-child { transition-delay: 50ms; }
+.menuItem:nth-child(3) span:last-child { transition-delay: 100ms; }
+.menuItem:nth-child(4) span:last-child { transition-delay: 150ms; }
+
+.divider {
+  height: 1px;
+  margin: 0 var(--spacing-4);
+  background-color: var(--sidebar-border);
+}
+
+/* ============================================
+   SETTINGS & USER
+============================================ */
+.settingsSection,
+.userSection {
+  padding: var(--spacing-4);
+  transition:
+    opacity var(--duration-normal) var(--easing-spring),
+    transform var(--duration-normal) var(--easing-spring);
+}
+
+.userContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
+}
+
+.avatar {
+  width: var(--size-8);
+  height: var(--size-8);
+  border-radius: var(--radius-full);
+  background-color: var(--sidebar-active);
+  color: var(--sidebar-text-active);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.userInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.userName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--sidebar-text-active);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userEmail {
+  font-size: var(--font-size-xs);
+  color: var(--sidebar-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================
+   ACCESSIBILITY
+============================================ */
+.menuItem:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.menuItem:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.menuItem:disabled:hover {
+  background: transparent;
+}
