@@ -1,0 +1,111 @@
+/* ============================================
+   TOOLTIP COMPONENT
+============================================ */
+
+.tooltip {
+    /* Component-level semantic tokens from primitives */
+    --tooltip-bg: var(--color-surface-primary);
+    --tooltip-text: var(--color-text-primary);
+    --tooltip-text-muted: var(--color-text-secondary);
+    --tooltip-border: var(--color-border-secondary);
+    --tooltip-shadow: var(--shadow-lg);
+  
+    position: fixed;
+    z-index: var(--z-tooltip);
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    border: 1px solid var(--tooltip-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--tooltip-shadow);
+    padding: var(--spacing-3);
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    transform: translate(-50%, -100%);
+    margin-top: calc(-1 * var(--spacing-2));
+    animation: tooltip-enter var(--duration-fast) var(--easing-spring);
+  }
+  
+  .tooltipContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+    min-width: 0;
+  }
+  
+  .tooltipValue {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--tooltip-text);
+    white-space: nowrap;
+  }
+  
+  .tooltipTime {
+    font-size: var(--font-size-xs);
+    color: var(--tooltip-text-muted);
+    white-space: nowrap;
+  }
+  
+  .tooltipUnit {
+    color: var(--tooltip-text-muted);
+    font-weight: var(--font-weight-normal);
+  }
+  
+  /* Tooltip arrow */
+  .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-top-color: var(--tooltip-bg);
+  }
+  
+  .tooltip::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-top-color: var(--tooltip-border);
+    margin-top: 1px;
+  }
+  
+  /* ============================================
+     ANIMATIONS
+  ============================================ */
+  
+  @keyframes tooltip-enter {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -100%) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -100%) scale(1);
+    }
+  }
+  
+  /* ============================================
+     RESPONSIVE DESIGN
+  ============================================ */
+  
+  @media (max-width: 640px) {
+    .tooltip {
+      padding: var(--spacing-2);
+      font-size: var(--font-size-xs);
+    }
+    
+    .tooltipValue {
+      font-size: var(--font-size-xs);
+    }
+    
+    .tooltipTime {
+      font-size: 10px;
+    }
+  }

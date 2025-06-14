@@ -1,0 +1,227 @@
+/* ============================================
+   METRIC CARD COMPONENT
+============================================ */
+
+.container {
+    /* Component-level semantic tokens from primitives */
+    --card-bg: var(--color-surface-primary);
+    --card-border: var(--color-border-secondary);
+    --card-text: var(--color-text-primary);
+    --card-text-muted: var(--color-text-secondary);
+    --card-shadow: var(--shadow-sm);
+    --card-hover-border: var(--color-border-primary);
+  
+    width: 100%;
+    transition: all var(--duration-slower) var(--easing-spring);
+  }
+  
+  .containerCollapsed {
+    grid-column: span 1;
+  }
+  
+  .containerExpanded {
+    grid-column: 1 / -1;
+    transform: scale(1.02);
+    z-index: var(--z-raised);
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-2);
+  }
+  
+  .headerLeft {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+  
+  .titleRow {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-1);
+  }
+  
+  .title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+  
+  .specInline {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-normal);
+  }
+  
+  
+  .spec {
+    font-size: var(--font-size-sm);
+    color: var(--card-text-muted);
+    line-height: var(--line-height-normal);
+  }
+  
+  .valueContainer {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-1);
+  }
+  
+  .value {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-medium);
+    color: var(--card-text);
+    line-height: var(--line-height-tight);
+  }
+  
+  .unit {
+    font-size: var(--font-size-base);
+    color: var(--card-text-muted);
+    line-height: var(--line-height-normal);
+  }
+  
+  .card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--card-shadow);
+    backdrop-filter: blur(8px);
+    padding: 0;
+    transition: all var(--duration-slower) var(--easing-spring);
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    border-color: var(--card-hover-border);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .cardCollapsed {
+    aspect-ratio: 16 / 9;
+  }
+  
+  .cardExpanded {
+    height: 18rem; /* 288px - increased height */
+  }
+  
+  .cardContent {
+    height: 100%;
+    padding: 0;
+  }
+  
+  .contentContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .expandButton {
+    position: absolute;
+    top: var(--spacing-1);
+    right: var(--spacing-1);
+    z-index: var(--z-raised);
+    width: auto;
+    height: auto;
+    padding: var(--spacing-1);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--card-text-muted);
+    cursor: pointer;
+    transition: all var(--duration-normal) var(--easing-spring);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .expandButton:hover {
+    background: var(--color-surface-secondary);
+    color: var(--card-text);
+    transform: scale(1.1);
+  }
+  
+  .expandButton:active {
+    transform: scale(0.95);
+  }
+  
+  .expandIcon {
+    width: var(--size-4);
+    height: var(--size-4);
+    transition: all var(--duration-normal) var(--easing-spring);
+  }
+  
+  .controlsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-1);
+    padding-left: var(--spacing-4);
+    padding-right: var(--spacing-1);
+    padding-top: var(--spacing-1);
+  }
+  
+  .controlsGroup {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin-right: var(--spacing-8); /* Space for expand button */
+  }
+  
+  .chartContainer {
+    flex: 1;
+    min-height: 0;
+    padding-left: var(--spacing-1);
+    padding-right: var(--spacing-1);
+    padding-bottom: var(--spacing-1);
+    overflow: visible;
+  }
+  
+  .chartContainerExpanded {
+    flex: 1;
+    min-height: 0;
+    padding-left: var(--spacing-1);
+    padding-right: var(--spacing-1);
+    padding-bottom: var(--spacing-1);
+    overflow: visible;
+  }
+  
+  .errorContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--card-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  
+  
+  /* ============================================
+     RESPONSIVE DESIGN
+  ============================================ */
+  
+  @media (max-width: 768px) {
+    .containerExpanded {
+      transform: scale(1);
+    }
+    
+    .cardExpanded {
+      height: 16rem; /* Smaller on mobile */
+    }
+    
+    .controlsContainer {
+      padding-left: var(--spacing-3);
+    }
+    
+    .title {
+      font-size: var(--font-size-base);
+    }
+    
+    .value {
+      font-size: var(--font-size-lg);
+    }
+  }

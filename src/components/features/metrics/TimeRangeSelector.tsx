@@ -1,42 +1,59 @@
-// src/components/metrics/TimeRangeSelector.tsx
+// src/components/features/metrics/TimeRangeSelector.tsx
+
+"use client";
+
 import React from 'react';
-import { cn } from '@lib/utils';
 import { TimeRangeSelectorProps, TIME_RANGES } from './types';
+import styles from './TimeRangeSelector.module.css';
 
 /**
- * TimeRangeSelector Component
+ * TimeRangeSelector Component - Refactored with CSS Modules
  * 
- * Purpose: Renders time range selection buttons (30m, 1h, 6h, 12h, 24h)
- * Responsibility: Handle time range selection UI only
- * 
- * @param activeRange - Currently selected time range
- * @param onRangeChange - Callback when range is changed
- * @returns JSX element with time range buttons
+ * Purpose: Time range selection buttons for metrics
+ * Features: Active state, hover effects, keyboard accessible
+ * Architecture: CSS Modules + primitive tokens, no Tailwind
  */
-const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({ 
-  activeRange, 
-  onRangeChange 
+const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
+  activeRange,
+  onRangeChange
 }) => {
+  const handleRangeClick = (range: string) => {
+    onRangeChange(range);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent, range: string) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleRangeClick(range);
+    }
+  };
+
   return (
-    <div className="flex gap-0.5 bg-muted rounded-md p-0.5 border border-border">
-      {TIME_RANGES.map(range => (
-        <button
-          key={range.value}
-          onClick={(e) => {
-            e.stopPropagation();
-            onRangeChange(range.value);
-          }}
-          className={cn(
-            "px-1.5 py-0.5 text-xs rounded transition-all duration-200 font-medium min-w-6",
-            activeRange === range.value 
-              ? "bg-primary text-primary-foreground shadow-sm" 
-              : "text-muted-foreground hover:text-foreground hover:bg-background"
-          )}
-          aria-label={`Select ${range.label} time range`}
-        >
-          {range.label}
-        </button>
-      ))}
+    <div className={styles.container} role="tablist" aria-label="Time range selector">
+      {TIME_RANGES.map((range) => {
+        const isActive = activeRange === range.value;
+        
+        // Determine button classes
+        const buttonClasses = [
+          styles.rangeButton,
+          isActive ? styles.rangeButtonActive : ''
+        ].filter(Boolean).join(' ');
+
+        return (
+          <button
+            key={range.value}
+            role="tab"
+            aria-selected={isActive}
+            tabIndex={isActive ? 0 : -1}
+            className={buttonClasses}
+            onClick={() => handleRangeClick(range.value)}
+            onKeyDown={(e) => handleKeyDown(e, range.value)}
+            aria-label={`Set time range to ${range.label}`}
+          >
+            {range.label}
+          </button>
+        );
+      })}
     </div>
   );
 };

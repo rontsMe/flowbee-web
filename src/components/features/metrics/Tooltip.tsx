@@ -1,34 +1,41 @@
-// src/components/metrics/Tooltip.tsx
+// src/components/features/metrics/Tooltip.tsx
+
+"use client";
+
 import React from 'react';
 import { TooltipProps, formatTooltipTime, formatValue } from './types';
+import styles from './Tooltip.module.css';
 
 /**
- * Tooltip Component
+ * Tooltip Component - Refactored with CSS Modules
  * 
- * Purpose: Display chart data tooltip on hover
- * Responsibility: Position and render tooltip content only
- * 
- * @param tooltip - Tooltip data with position, timestamp, value, and unit
- * @returns Positioned tooltip JSX element
+ * Purpose: Chart hover tooltip display
+ * Features: Fixed positioning, formatted values, theme-aware
+ * Architecture: CSS Modules + primitive tokens, no Tailwind
  */
 const Tooltip: React.FC<TooltipProps> = ({ tooltip }) => {
-  // Calculate position to keep tooltip within viewport
-  const tooltipX = Math.min(tooltip.x + 10, window.innerWidth - 200);
-  const tooltipY = Math.max(tooltip.y - 50, 10);
+  const { x, y, timestamp, value, unit } = tooltip;
+
+  const tooltipStyle: React.CSSProperties = {
+    left: x,
+    top: y,
+  };
 
   return (
-    <div
-      className="fixed z-50 bg-popover border border-border rounded-lg p-3 pointer-events-none shadow-xl"
-      style={{
-        left: tooltipX,
-        top: tooltipY,
-      }}
+    <div 
+      className={styles.tooltip} 
+      style={tooltipStyle}
+      role="tooltip"
+      aria-live="polite"
     >
-      <div className="text-xs text-muted-foreground">
-        {formatTooltipTime(tooltip.timestamp)}
-      </div>
-      <div className="text-sm font-bold text-foreground">
-        {formatValue(tooltip.value, tooltip.unit)}
+      <div className={styles.tooltipContent}>
+        <div className={styles.tooltipValue}>
+          {formatValue(value, undefined, 1)}
+          {unit && <span className={styles.tooltipUnit}>{unit}</span>}
+        </div>
+        <div className={styles.tooltipTime}>
+          {formatTooltipTime(timestamp)}
+        </div>
       </div>
     </div>
   );

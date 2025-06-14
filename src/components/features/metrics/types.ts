@@ -42,13 +42,18 @@ export interface MetricCardProps {
   value: string | number;
   unit?: string;
   spec?: string;
+  chartType:"line"|"area"|"bar"
   isExpanded: boolean;
   onToggleExpand: () => void;
   timeRange?: string;
   onTimeRangeChange?: (range: string) => void;
-  children: React.ReactNode;
   className?: string;
-  data?: ChartDataPoint[]; // ✅ Optional data for dynamic padding
+  data?: ChartDataPoint[];
+  color: string,
+  opacity:number,
+  showGrid:boolean,
+  showYAxis:boolean,
+  showXAxis:boolean 
 }
 
 /**
@@ -57,6 +62,7 @@ export interface MetricCardProps {
  */
 export interface SystemMetricCardProps {
   title: string;
+  titleRight:string
   children: React.ReactNode;
   className?: string;
   columns?: {
@@ -350,9 +356,3 @@ export interface RowCalculationResult {
   cardPositions: number[]; // Which row each card is in
 }
 
-/**
- * Base props for metric cards
- */
-export interface MetricCardProps {
-  children: React.ReactNode;
-}

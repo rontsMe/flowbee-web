@@ -1,0 +1,222 @@
+/* ============================================
+   SYSTEM METRIC CARD CONTAINER
+============================================ */
+
+.container {
+    /* Component-level semantic tokens from primitives */
+    --container-bg: transparent;
+    --container-text: var(--color-text-primary);
+    --container-text-muted: var(--color-text-secondary);
+  
+    background: var(--container-bg);
+    color: var(--container-text);
+  }
+  
+  .headerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--spacing-6);
+    padding: 0 var(--spacing-1);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+  
+  .titleRight {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+  
+  
+  .subtitle {
+    font-size: var(--font-size-base);
+    color: var(--container-text-muted);
+    margin-top: var(--spacing-1);
+  }
+  
+  .headerActions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+  
+  /* ============================================
+     GRID LAYOUTS
+  ============================================ */
+  
+  .grid {
+    display: grid;
+    gap: var(--spacing-4);
+    width: 100%;
+  }
+  
+  /* Default: 1 column (mobile) */
+  .gridDefault1 {
+    grid-template-columns: 1fr;
+  }
+  
+  .gridDefault2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .gridDefault3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .gridDefault4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  /* Small screens */
+  @media (min-width: 640px) {
+    .gridSm1 {
+      grid-template-columns: 1fr;
+    }
+    
+    .gridSm2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .gridSm3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .gridSm4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* Medium screens */
+  @media (min-width: 768px) {
+    .gridMd1 {
+      grid-template-columns: 1fr;
+    }
+    
+    .gridMd2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .gridMd3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .gridMd4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* Large screens */
+  @media (min-width: 1024px) {
+    .gridLg1 {
+      grid-template-columns: 1fr;
+    }
+    
+    .gridLg2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .gridLg3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .gridLg4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* Extra large screens */
+  @media (min-width: 1280px) {
+    .gridXl1 {
+      grid-template-columns: 1fr;
+    }
+    
+    .gridXl2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .gridXl3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .gridXl4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* ============================================
+     RESPONSIVE ADJUSTMENTS
+  ============================================ */
+  
+  @media (max-width: 640px) {
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--spacing-2);
+    }
+    
+    .title {
+      font-size: var(--font-size-xl);
+    }
+    
+    .grid {
+      gap: var(--spacing-3);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      padding: 0;
+    }
+    
+    .header {
+      margin-bottom: var(--spacing-4);
+    }
+    
+    .title {
+      font-size: var(--font-size-lg);
+    }
+    
+    .grid {
+      gap: var(--spacing-2);
+    }
+  }
+
+  
+  /* ============================================
+     LOADING & EMPTY STATES
+  ============================================ */
+  
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-8);
+    color: var(--container-text-muted);
+    font-size: var(--font-size-sm);
+  }
+  
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-8);
+    color: var(--container-text-muted);
+    text-align: center;
+  }
+  
+  .emptyTitle {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--spacing-2);
+  }
+  
+  .emptyDescription {
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+  }

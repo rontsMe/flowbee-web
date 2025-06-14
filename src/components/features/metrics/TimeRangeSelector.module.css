@@ -1,0 +1,90 @@
+/* ============================================
+   TIME RANGE SELECTOR COMPONENT
+============================================ */
+
+.container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    background: var(--color-surface-secondary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-1);
+  }
+  
+  .rangeButton {
+    /* Component-level semantic tokens from primitives */
+    --button-bg: transparent;
+    --button-text: var(--color-text-secondary);
+    --button-hover-bg: var(--color-surface-accent);
+    --button-hover-text: var(--color-text-primary);
+    --button-active-bg: var(--color-brand-primary);
+    --button-active-text: var(--color-text-inverse);
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-1) var(--spacing-2);
+    background: var(--button-bg);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-family-sans);
+    color: var(--button-text);
+    cursor: pointer;
+    transition: all var(--duration-normal) var(--easing-spring);
+    min-width: 2rem;
+    height: 1.5rem;
+  }
+  
+  .rangeButton:hover {
+    background: var(--button-hover-bg);
+    color: var(--button-hover-text);
+    transform: translateY(-1px);
+  }
+  
+  .rangeButton:active {
+    transform: translateY(0);
+  }
+  
+  .rangeButton:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+  
+  .rangeButtonActive {
+    background: var(--button-active-bg);
+    color: var(--button-active-text);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .rangeButtonActive:hover {
+    background: var(--button-active-bg);
+    color: var(--button-active-text);
+    transform: none;
+  }
+  
+  .rangeButtonDisabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
+  /* ============================================
+     RESPONSIVE DESIGN
+  ============================================ */
+  
+  @media (max-width: 640px) {
+    .container {
+      gap: 0;
+      padding: 2px;
+    }
+    
+    .rangeButton {
+      padding: var(--spacing-1);
+      font-size: 10px;
+      min-width: 1.5rem;
+      height: 1.25rem;
+    }
+  }
