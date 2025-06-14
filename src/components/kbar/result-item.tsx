@@ -1,5 +1,7 @@
+// components/kbar/result-item.tsx
 import type { ActionId, ActionImpl } from 'kbar';
 import * as React from 'react';
+import styles from './KBarResultItem.module.css';
 
 const ResultItem = React.forwardRef(
   (
@@ -25,43 +27,49 @@ const ResultItem = React.forwardRef(
     return (
       <div
         ref={ref}
-        className={`relative z-10 flex cursor-pointer items-center justify-between px-4 py-3`}
+        className={`${styles.resultItem} ${active ? styles.resultItemActive : ''}`}
       >
         {active && (
-          <div
-            id='kbar-result-item'
-            className='border-primary bg-accent/50 absolute inset-0 z-[-1]! border-l-4'
-          ></div>
+          <div className={styles.activeIndicator}></div>
         )}
-        <div className='relative z-10 flex items-center gap-2'>
-          {action.icon && action.icon}
-          <div className='flex flex-col'>
-            <div>
-              {ancestors.length > 0 &&
-                ancestors.map((ancestor) => (
+        
+        <div className={styles.contentContainer}>
+          {action.icon && (
+            <div className={styles.iconContainer}>
+              {action.icon}
+            </div>
+          )}
+          
+          <div className={styles.textContainer}>
+            {ancestors.length > 0 && (
+              <div className={styles.breadcrumbContainer}>
+                {ancestors.map((ancestor) => (
                   <React.Fragment key={ancestor.id}>
-                    <span className='text-muted-foreground mr-2'>
+                    <span className={styles.breadcrumbItem}>
                       {ancestor.name}
                     </span>
-                    <span className='mr-2'>&rsaquo;</span>
+                    <span className={styles.breadcrumbSeparator}>&rsaquo;</span>
                   </React.Fragment>
                 ))}
-              <span>{action.name}</span>
+              </div>
+            )}
+            
+            <div className={styles.actionName}>
+              {action.name}
             </div>
+            
             {action.subtitle && (
-              <span className='text-muted-foreground text-sm'>
+              <div className={styles.actionSubtitle}>
                 {action.subtitle}
-              </span>
+              </div>
             )}
           </div>
         </div>
+        
         {action.shortcut?.length ? (
-          <div className='relative z-10 grid grid-flow-col gap-1'>
+          <div className={styles.shortcutContainer}>
             {action.shortcut.map((sc, i) => (
-              <kbd
-                key={sc + i}
-                className='bg-muted flex h-5 items-center gap-1 rounded-md border px-1.5 text-[10px] font-medium'
-              >
+              <kbd key={sc + i} className={styles.shortcutKey}>
                 {sc}
               </kbd>
             ))}

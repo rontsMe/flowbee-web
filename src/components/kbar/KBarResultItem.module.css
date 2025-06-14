@@ -1,0 +1,177 @@
+/* ============================================
+   KBAR RESULT ITEM STYLES
+============================================ */
+
+.resultItem {
+    /* Component-level semantic tokens from primitives */
+    --item-bg: var(--color-surface-primary);
+    --item-text: var(--color-text-primary);
+    --item-text-muted: var(--color-text-secondary);
+    --item-hover-bg: var(--color-surface-secondary);
+    --item-active-bg: var(--color-surface-secondary);
+    --item-active-border: var(--color-brand-primary);
+    --item-border: var(--color-border-muted);
+  
+    position: relative;
+    z-index: var(--z-base);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-4) var(--spacing-4);
+    background: var(--item-bg);
+    color: var(--item-text);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--easing-spring);
+    border-bottom: 1px solid var(--item-border);
+  }
+  
+  .resultItem:hover {
+    background: var(--item-hover-bg);
+    border-bottom-color: var(--color-border-secondary);
+  }
+  
+  .resultItem:last-child {
+    border-bottom: none;
+  }
+  
+  .activeIndicator {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--item-active-bg);
+    border-left: 4px solid var(--item-active-border);
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--easing-spring);
+  }
+  
+  .resultItemActive .activeIndicator {
+    opacity: 1;
+  }
+  
+  .contentContainer {
+    position: relative;
+    z-index: var(--z-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex: 1;
+  }
+  
+  .iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--size-5);
+    height: var(--size-5);
+    color: var(--item-text-muted);
+  }
+  
+  .textContainer {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+  
+  .breadcrumbContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-1);
+  }
+  
+  .breadcrumbItem {
+    color: var(--item-text-muted);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+  }
+  
+  .breadcrumbSeparator {
+    color: var(--item-text-muted);
+    font-size: var(--font-size-sm);
+    opacity: 0.6;
+  }
+  
+  .actionName {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--item-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .actionSubtitle {
+    font-size: var(--font-size-sm);
+    color: var(--item-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: var(--spacing-1);
+    opacity: 0.8;
+  }
+  
+  .shortcutContainer {
+    position: relative;
+    z-index: var(--z-base);
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--spacing-1);
+  }
+  
+  .shortcutKey {
+    /* Component-level semantic tokens */
+    --shortcut-bg: var(--color-surface-accent);
+    --shortcut-text: var(--color-text-primary);
+    --shortcut-border: var(--color-border-secondary);
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--size-5);
+    padding: 0 var(--spacing-2);
+    background: var(--shortcut-bg);
+    color: var(--shortcut-text);
+    border: 1px solid var(--shortcut-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    font-family: var(--font-family-mono);
+    text-transform: uppercase;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* ============================================
+     ACTIVE STATE
+  ============================================ */
+  
+  .resultItemActive {
+    background: var(--item-active-bg);
+  }
+  
+  .resultItemActive .actionName {
+    color: var(--color-brand-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+  
+  .resultItemActive .iconContainer {
+    color: var(--color-brand-primary);
+  }
+  
+  /* ============================================
+     RESPONSIVE
+  ============================================ */
+  
+  @media (max-width: 640px) {
+    .resultItem {
+      padding: var(--spacing-3);
+    }
+    
+    .shortcutContainer {
+      display: none;
+    }
+    
+    .actionName {
+      font-size: var(--font-size-sm);
+    }
+  }

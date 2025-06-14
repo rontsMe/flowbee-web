@@ -1,0 +1,134 @@
+/* ============================================
+   KBAR COMPONENT STYLES
+============================================ */
+
+.positioner {
+    /* Component-level semantic tokens from primitives */
+    --kbar-backdrop: var(--color-surface-primary);
+    --kbar-backdrop-opacity: 0.8;
+    --kbar-blur: blur(8px);
+  
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-max);
+    background-color: rgba(0, 0, 0, var(--kbar-backdrop-opacity));
+    backdrop-filter: var(--kbar-blur);
+    padding: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 20vh;
+  }
+  
+  .animator {
+    /* Component-level semantic tokens */
+    --kbar-bg: var(--color-surface-primary);
+    --kbar-text: var(--color-text-primary);
+    --kbar-border: var(--color-border-secondary);
+    --kbar-shadow: var(--shadow-xl);
+  
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    background: var(--kbar-bg);
+    color: var(--kbar-text);
+    border: 1px solid var(--kbar-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--kbar-shadow);
+    overflow: hidden;
+    transform: translateY(-3rem);
+    animation: kbar-enter var(--duration-normal) var(--easing-spring) forwards;
+  }
+  
+  .searchContainer {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-raised);
+    background: var(--kbar-bg);
+    border-bottom: 2px solid var(--kbar-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search {
+    width: 100%;
+    background: var(--kbar-bg);
+    border: none;
+    outline: none;
+    padding: var(--spacing-4) var(--spacing-6);
+    font-size: var(--font-size-lg);
+    font-family: var(--font-family-sans);
+    color: var(--kbar-text);
+    transition: all var(--duration-normal) var(--easing-spring);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .search::placeholder {
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-normal);
+  }
+  
+  .search:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  
+  .resultsContainer {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-tertiary) transparent;
+  }
+  
+  /* Webkit scrollbar styling */
+  .resultsContainer::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .resultsContainer::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .resultsContainer::-webkit-scrollbar-thumb {
+    background: var(--color-border-tertiary);
+    border-radius: var(--radius-full);
+  }
+  
+  .resultsContainer::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-secondary);
+  }
+  
+  /* ============================================
+     ANIMATIONS
+  ============================================ */
+  
+  @keyframes kbar-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-4rem) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-3rem) scale(1);
+    }
+  }
+  
+  /* ============================================
+     RESPONSIVE
+  ============================================ */
+  
+  @media (max-width: 640px) {
+    .positioner {
+      padding-top: 10vh;
+      padding-left: var(--spacing-4);
+      padding-right: var(--spacing-4);
+    }
+    
+    .animator {
+      max-width: 100%;
+    }
+    
+    .search {
+      padding: var(--spacing-3) var(--spacing-4);
+      font-size: var(--font-size-base);
+    }
+  }

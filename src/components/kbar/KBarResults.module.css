@@ -1,0 +1,29 @@
+/* ============================================
+   KBAR RESULTS STYLES
+============================================ */
+
+.sectionHeader {
+    /* Component-level semantic tokens from primitives */
+    --section-text: var(--color-text-primary);
+    --section-bg: var(--color-surface-accent);
+    --section-border: var(--color-border-secondary);
+  
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--section-bg);
+    color: var(--section-text);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-top: 1px solid var(--section-border);
+    border-bottom: 1px solid var(--section-border);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-raised);
+    margin-bottom: var(--spacing-1);
+  }
+  
+  .sectionHeader:first-child {
+    border-top: none;
+    margin-top: var(--spacing-2);
+  }

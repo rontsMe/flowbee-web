@@ -1,5 +1,7 @@
+// components/kbar/render-result.tsx
 import { KBarResults, useMatches } from 'kbar';
 import ResultItem from './result-item';
+import styles from './KBarResults.module.css';
 
 export default function RenderResults() {
   const { results, rootActionId } = useMatches();
@@ -9,7 +11,7 @@ export default function RenderResults() {
       items={results}
       onRender={({ item, active }) =>
         typeof item === 'string' ? (
-          <div className='text-primary-foreground px-4 py-2 text-sm uppercase opacity-50'>
+          <div className={styles.sectionHeader}>
             {item}
           </div>
         ) : (
