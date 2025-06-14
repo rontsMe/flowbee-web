@@ -6,15 +6,26 @@
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
         "**/node_modules": true,
-        "node_modules": true,
         "**/public": true,
-        "public": true,
         "**/.history": true,
-        ".history": true,
         "**/.next": true,
-        ".next": true,
-        "**/.vscode": true,
-        ".vscode": true
+        "**/.vscode": false
     },
-    "explorerExclude.backup": {}
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/.git/**": true,
+        "**/.svn/**": true,
+        "**/.hg/**": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+    "editor.formatOnSave": true,
+    "eslint.run": "onSave",
+    "typescript.tsserver.maxTsServerMemory": 4096,
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+    "typescript.tsserver.log": "off",
+    "files.autoSave": "onWindowChange",  // Optional: Auto-save only when the window changes
+    "git.enabled": true,  // Optional: Disable Git integration if needed
+    "editor.largeFileOptimizations": false,  // Optional: Disable optimizations for very large files
+    "editor.maxTokenizationLineLength": 20000  // Optional: Handle large files better,
 }

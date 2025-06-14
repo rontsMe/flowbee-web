@@ -1,11 +1,10 @@
-// components/WorkflowTable.tsx
-
 'use client'
 
-import React from 'react';
-import { Button } from '@ui/button';
-import { Badge } from '@ui/badge';
-import classnames from 'classnames';
+
+import React, { useState } from 'react';
+import {Button} from '@ui/button';
+import classnames from 'classnames'
+import {Badge} from "@ui/badge";
 
 interface WorkflowRow {
   id: string;
@@ -16,8 +15,6 @@ interface WorkflowRow {
   cpu: string;
   memory: string;
   gpu?: string;
-  inputSize?: string;
-  outputSize?: string;
   execRate: string;
   execCount24h: number;
   apiTags: string[];
@@ -33,8 +30,6 @@ const workflows: WorkflowRow[] = [
     cpu: '45%',
     memory: '1.2 GB',
     gpu: '-',
-    inputSize: '2.4 MB',
-    outputSize: '700 KB',
     execRate: '15/min',
     execCount24h: 780,
     apiTags: ['YouTube', 'Supabase']
@@ -48,8 +43,6 @@ const workflows: WorkflowRow[] = [
     cpu: '82%',
     memory: '3.5 GB',
     gpu: '17%',
-    inputSize: '500 KB',
-    outputSize: '2.2 MB',
     execRate: '3/min',
     execCount24h: 98,
     apiTags: ['OpenAI', 'Slack']
@@ -66,12 +59,9 @@ const WorkflowTable: React.FC = () => {
             <th className="px-3 py-2 text-left">Status</th>
             <th className="px-3 py-2 text-left">Last Run</th>
             <th className="px-3 py-2 text-left">Avg Time</th>
-            <th className="px-3 py-2"></th>
             <th className="px-3 py-2 text-left">CPU</th>
             <th className="px-3 py-2 text-left">Memory</th>
             <th className="px-3 py-2 text-left">GPU</th>
-            <th className="px-3 py-2 text-left">Input</th>
-            <th className="px-3 py-2 text-left">Output</th>
             <th className="px-3 py-2 text-left">Rate</th>
             <th className="px-3 py-2 text-left">24h Count</th>
             <th className="px-3 py-2 text-left">APIs</th>
@@ -94,12 +84,9 @@ const WorkflowTable: React.FC = () => {
               </td>
               <td className="px-3 py-2">{wf.lastRun}</td>
               <td className="px-3 py-2">{wf.avgDuration}</td>
-              <td className="px-3 py-2"></td>
               <td className="px-3 py-2">{wf.cpu}</td>
               <td className="px-3 py-2">{wf.memory}</td>
               <td className="px-3 py-2">{wf.gpu || '-'}</td>
-              <td className="px-3 py-2">{wf.inputSize || '-'}</td>
-              <td className="px-3 py-2">{wf.outputSize || '-'}</td>
               <td className="px-3 py-2">{wf.execRate}</td>
               <td className="px-3 py-2">{wf.execCount24h}</td>
               <td className="px-3 py-2 space-x-1">

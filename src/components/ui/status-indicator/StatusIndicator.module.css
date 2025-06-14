@@ -1,0 +1,93 @@
+/* src/components/ui/status-indicator/StatusIndicator.module.css */
+
+/**
+ * StatusIndicator Styles
+ * 
+ * Purpose: Visual status indicator with theme-aware colors
+ * Architecture: CSS Modules using globals1.css design tokens
+ * Features: Multiple sizes, status colors, optional animation
+ */
+
+ .indicator {
+    display: inline-block;
+    border-radius: var(--radius-full);
+    transition: all var(--duration-fast) var(--easing-ease);
+    flex-shrink: 0;
+  }
+  
+  /* Size Variants */
+  .size-xs {
+    width: var(--spacing-2);
+    height: var(--spacing-2);
+  }
+  
+  .size-sm {
+    width: var(--spacing-3);
+    height: var(--spacing-3);
+  }
+  
+  .size-md {
+    width: var(--spacing-4);
+    height: var(--spacing-4);
+  }
+  
+  .size-lg {
+    width: var(--spacing-6);
+    height: var(--spacing-6);
+  }
+  
+  /* Status Colors */
+  .status-running {
+    background-color: var(--color-state-success);
+  }
+  
+  .status-paused {
+    background-color: var(--color-state-warning);
+  }
+  
+  .status-failed {
+    background-color: var(--color-state-error);
+  }
+  
+  .status-idle {
+    background-color: var(--color-text-tertiary);
+  }
+  
+  .status-healthy {
+    background-color: var(--color-state-success);
+  }
+  
+  .status-degraded {
+    background-color: var(--color-state-warning);
+  }
+  
+  .status-down {
+    background-color: var(--color-state-error);
+  }
+  
+  /* Animation */
+  .animated {
+    animation: pulse var(--duration-slow) ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  /* Focus states for accessibility */
+  .indicator:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animated {
+      animation: none;
+    }
+  }
