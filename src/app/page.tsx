@@ -13,7 +13,7 @@ import {
   getDataPointsCount,
   CHART_UPDATE_INTERVAL
 } from '@features/metrics';
-
+import TabNavigation from '@compound/tabNavigation/TabNavigation';
 // Import UI components
 import { Badge } from '@ui/badge';
 import { cn } from '@lib/utils';
@@ -208,10 +208,28 @@ export default function DashboardPage() {
   const getLatestValue = (data: ChartDataPoint[], defaultValue: string) => {
     return data.length > 0 ? data[data.length - 1].value.toFixed(0) : defaultValue;
   };
-
+  const tabs = [
+    { 
+      id: 'overview', 
+      label: 'Overview',
+      content: <h1>Overview</h1>
+    },
+    { 
+      id: 'analytics', 
+      label: 'Analytics', 
+      content: <h1>Analytics</h1>
+    },
+    { 
+      id: 'reports', 
+      label: 'Reports',
+      content: <h1>Reports</h1>
+    }
+  ];
+  
+  
   return (
     <PageContainer>
-      <h1>Hello</h1>
+      <TabNavigation tabs={tabs} defaultActiveTab="overview" />
     </PageContainer>
   );
 }

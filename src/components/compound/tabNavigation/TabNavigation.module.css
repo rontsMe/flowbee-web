@@ -1,0 +1,144 @@
+/* ============================================
+   TAB NAVIGATION COMPONENT
+============================================ */
+
+.tabContainer {
+    display: flex;
+    justify-content: center;
+    padding: 0 var(--spacing-6) var(--spacing-4);
+  }
+  
+  .tabNavigation {
+    display: flex;
+    gap: var(--spacing-8);
+    align-items: center;
+  }
+  
+  .tabButton {
+    /* Component-level semantic tokens from primitives */
+    --tab-text-inactive: var(--color-text-secondary);
+    --tab-text-active: var(--color-text-primary);
+    --tab-border-inactive: transparent;
+    --tab-border-hover: var(--color-border-secondary);
+    --tab-border-active-start: var(--color-brand-primary);
+    --tab-border-active-end: var(--color-brand-light);
+  
+    position: relative;
+    padding: var(--spacing-2) var(--spacing-4);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--tab-border-inactive);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-family-sans);
+    color: var(--tab-text-inactive);
+    cursor: pointer;
+    transition: all var(--duration-normal) var(--easing-spring);
+    outline: none;
+  }
+  
+  .tabButton:hover:not(.tabActive) {
+    color: var(--tab-text-active);
+    border-bottom-color: var(--tab-border-hover);
+  }
+  
+  .tabButton:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+  
+  /* Active Tab with Gradient Border */
+  .tabActive {
+    color: var(--tab-text-active);
+    font-weight: var(--font-weight-semibold);
+    border-bottom: 2px solid transparent;
+    background-image: linear-gradient(
+      to bottom,
+      transparent,
+      transparent
+    ),
+    linear-gradient(
+      90deg,
+      var(--tab-border-active-start) 0%,
+      var(--tab-border-active-end) 100%
+    );
+    background-size: 100% 100%, 100% 2px;
+    background-position: 0 0, 0 100%;
+    background-repeat: no-repeat;
+  }
+  
+  .tabActive:hover {
+    color: var(--tab-text-active);
+    /* Keep gradient border on hover */
+  }
+  
+  /* Alternative implementation using ::after pseudo-element */
+  .tabActiveAlt {
+    color: var(--tab-text-active);
+    font-weight: var(--font-weight-semibold);
+    border-bottom: 2px solid transparent;
+  }
+  
+  .tabActiveAlt::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      var(--tab-border-active-start) 0%,
+      var(--tab-border-active-end) 100%
+    );
+    border-radius: var(--radius-sm);
+  }
+  
+  /* ============================================
+     TAB CONTENT AREA
+  ============================================ */
+  
+  .tabContent {
+    /* Component-level semantic tokens */
+    --content-bg: var(--color-surface-primary);
+    --content-text: var(--color-text-primary);
+    --content-border: var(--color-border-muted);
+  
+    background: var(--content-bg);
+    color: var(--content-text);
+    padding: var(--spacing-6);
+    border-top: 1px solid var(--content-border);
+    min-height: 200px;
+    transition: all var(--duration-normal) var(--easing-spring);
+  }
+  
+  /* ============================================
+     RESPONSIVE DESIGN
+  ============================================ */
+  
+  @media (max-width: 768px) {
+    .tabContainer {
+      padding: 0 var(--spacing-4) var(--spacing-3);
+    }
+    
+    .tabNavigation {
+      gap: var(--spacing-6);
+    }
+    
+    .tabButton {
+      padding: var(--spacing-2) var(--spacing-3);
+      font-size: var(--font-size-xs);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .tabNavigation {
+      gap: var(--spacing-4);
+    }
+    
+    .tabButton {
+      padding: var(--spacing-2);
+      font-size: var(--font-size-xs);
+    }
+  }
