@@ -1,0 +1,169 @@
+/* src/components/features/workflow-dashboard/WorkflowDashboard.module.css */
+
+/**
+ * WorkflowDashboard Styles
+ * 
+ * Purpose: Main dashboard layout and styling
+ * Architecture: CSS Modules using globals1.css design tokens
+ * Features: Responsive layout, theme-aware styling
+ */
+
+ .dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--color-surface-tertiary);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-sans);
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-6);
+    padding: var(--spacing-6);
+    background-color: var(--color-surface-primary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .headerContent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: var(--line-height-tight);
+  }
+  
+  .subtitle {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: var(--line-height-normal);
+  }
+  
+  .headerActions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+  
+  .refreshButton {
+    padding: var(--spacing-2) var(--spacing-4);
+    background-color: var(--color-brand-primary);
+    border: 1px solid var(--color-brand-primary);
+    border-radius: var(--radius-md);
+    color: var(--color-text-inverse);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--easing-ease);
+  }
+  
+  .refreshButton:hover {
+    background-color: var(--color-interactive-primary-hover);
+    border-color: var(--color-interactive-primary-hover);
+  }
+  
+  .refreshButton:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+  
+  /* Content */
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+    padding: 0 var(--spacing-6) var(--spacing-6);
+  }
+  
+  .workflowTable {
+    flex: 1;
+  }
+  
+  /* Selected workflow info (temporary) */
+  .selectedInfo {
+    padding: var(--spacing-4);
+    background-color: var(--color-surface-primary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-4);
+      padding: var(--spacing-4);
+    }
+    
+    .headerActions {
+      justify-content: flex-end;
+    }
+    
+    .title {
+      font-size: var(--font-size-xl);
+    }
+    
+    .subtitle {
+      font-size: var(--font-size-sm);
+    }
+    
+    .content {
+      padding: 0 var(--spacing-4) var(--spacing-4);
+      gap: var(--spacing-4);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .dashboard {
+      padding: var(--spacing-2);
+    }
+    
+    .header {
+      padding: var(--spacing-3);
+      margin-bottom: var(--spacing-4);
+    }
+    
+    .content {
+      padding: 0 var(--spacing-2) var(--spacing-2);
+    }
+  }
+  
+  /* Dark theme adjustments */
+  :global(.dark) .header {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .header {
+      border-width: 2px;
+    }
+    
+    .refreshButton {
+      border-width: 2px;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .refreshButton {
+      transition: none;
+    }
+  }

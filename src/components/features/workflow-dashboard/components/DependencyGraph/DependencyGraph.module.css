@@ -1,0 +1,378 @@
+/* src/components/features/workflow-dashboard/components/DependencyGraph/DependencyGraph.module.css */
+
+/**
+ * DependencyGraph Styles
+ * 
+ * Purpose: Visual workflow dependency representation
+ * Architecture: CSS Modules using globals1.css design tokens
+ * Features: Interactive steps, API indicators, bottleneck highlighting
+ */
+
+ .container {
+  margin-bottom: var(--spacing-6);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-4);
+  gap: var(--spacing-4);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: var(--spacing-6);
+  flex-wrap: wrap;
+}
+
+.legendSection {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.legendTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.legendItems {
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.legendDot {
+  width: var(--spacing-3);
+  height: var(--spacing-3);
+  border-radius: var(--radius-sm);
+}
+
+.legendArrow {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Legend Arrow Colors */
+.statusSuccess {
+  color: var(--color-state-success);
+}
+
+.statusWarning {
+  color: var(--color-state-warning);
+}
+
+.statusError {
+  color: var(--color-state-error);
+}
+
+.typeApi {
+  background-color: var(--color-state-error);
+}
+
+.typeInternal {
+  background-color: var(--color-state-warning);
+}
+
+.typeStorage {
+  background-color: var(--color-state-success);
+}
+
+/* Graph Container */
+.graphContainer {
+  background-color: var(--color-surface-secondary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-8) var(--spacing-4);
+  position: relative;
+}
+
+.stepsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+/* Step Wrapper */
+.stepWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* API Arrows */
+.apiArrow {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-sm);
+  z-index: 1;
+}
+
+.direction-up {
+  bottom: 100%;
+  margin-bottom: var(--spacing-2);
+}
+
+.direction-down {
+  top: 100%;
+  margin-top: var(--spacing-2);
+}
+
+.apiLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.apiStatus {
+  font-size: var(--font-size-sm);
+}
+
+.status-success {
+  color: var(--color-state-success);
+}
+
+.status-warning {
+  color: var(--color-state-warning);
+}
+
+.status-error {
+  color: var(--color-state-error);
+}
+
+.status-neutral {
+  color: var(--color-text-tertiary);
+}
+
+.arrow {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary); /* Changed from colored to neutral */
+}
+
+/* Step Nodes */
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 85px;
+  height: 45px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-secondary);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--easing-ease);
+  background-color: var(--color-surface-primary);
+}
+
+.step:hover,
+.step.hovered {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-border-primary);
+}
+
+.stepName {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  text-align: center;
+  line-height: var(--line-height-tight);
+}
+
+.stepDuration {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-top: var(--spacing-0-5);
+}
+
+/* Step Type Colors */
+.type-api {
+  border-color: var(--color-state-error);
+  background-color: color-mix(in srgb, var(--color-state-error) 5%, var(--color-surface-primary));
+}
+
+.type-internal {
+  border-color: var(--color-state-warning);
+  background-color: color-mix(in srgb, var(--color-state-warning) 5%, var(--color-surface-primary));
+}
+
+.type-storage {
+  border-color: var(--color-state-success);
+  background-color: color-mix(in srgb, var(--color-state-success) 5%, var(--color-surface-primary));
+}
+
+/* Bottleneck Styling */
+.bottleneck {
+  border-width: 2px;
+  border-color: var(--color-state-error);
+  animation: pulse var(--duration-slower) ease-in-out infinite;
+}
+
+.bottleneckIndicator {
+  position: absolute;
+  top: var(--spacing-1);
+  right: var(--spacing-1);
+  width: var(--spacing-2);
+  height: var(--spacing-2);
+  background-color: var(--color-brand-primary);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  animation: pulse var(--duration-normal) ease-in-out infinite;
+}
+
+/* Flow Arrows */
+.flowArrow {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-lg);
+  user-select: none;
+  margin: 0 var(--spacing-2);
+}
+
+/* Bottleneck Legend */
+.bottleneckLegend {
+  position: absolute;
+  bottom: var(--spacing-2);
+  right: var(--spacing-3);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-state-error);
+}
+
+.bottleneckLine {
+  width: var(--spacing-4);
+  height: 2px;
+  background-color: var(--color-state-error);
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+  
+  .legend {
+    align-self: stretch;
+  }
+  
+  .legendSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
+  
+  .stepsContainer {
+    gap: var(--spacing-3);
+  }
+  
+  .step {
+    width: 75px;
+    height: 40px;
+  }
+  
+  .stepName {
+    font-size: 10px;
+  }
+  
+  .stepDuration {
+    font-size: 9px;
+  }
+  
+  .flowArrow {
+    margin: 0 var(--spacing-1);
+  }
+}
+
+@media (max-width: 640px) {
+  .stepsContainer {
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+  
+  .flowArrow {
+    transform: rotate(90deg);
+    margin: var(--spacing-1) 0;
+  }
+  
+  .apiArrow.direction-up {
+    left: 100%;
+    bottom: auto;
+    margin-left: var(--spacing-2);
+    margin-bottom: 0;
+  }
+  
+  .apiArrow.direction-down {
+    right: 100%;
+    top: auto;
+    margin-right: var(--spacing-2);
+    margin-top: 0;
+  }
+}
+
+/* Dark theme adjustments */
+:global(.dark) .step:hover,
+:global(.dark) .step.hovered {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .step {
+    transition: none;
+  }
+  
+  .step:hover,
+  .step.hovered {
+    transform: none;
+  }
+  
+  .bottleneck,
+  .bottleneckIndicator {
+    animation: none;
+  }
+}

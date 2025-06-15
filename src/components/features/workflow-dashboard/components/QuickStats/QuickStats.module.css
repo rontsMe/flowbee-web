@@ -1,0 +1,215 @@
+/* src/components/features/workflow-dashboard/components/QuickStats/QuickStats.module.css */
+
+/**
+ * QuickStats Styles
+ * 
+ * Purpose: Compact display of key workflow metrics
+ * Architecture: CSS Modules using globals1.css design tokens
+ * Features: Trend indicators, severity states, responsive grid
+ */
+
+ .container {
+    margin-bottom: var(--spacing-6);
+  }
+  
+  .title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-4) 0;
+  }
+  
+  .statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-4);
+  }
+  
+  /* Stat Cards */
+  .statCard {
+    background-color: var(--color-surface-secondary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    transition: all var(--duration-fast) var(--easing-ease);
+  }
+  
+  .statCard:hover {
+    border-color: var(--color-border-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Trend-based card colors */
+  .trend-success {
+    border-left: 4px solid var(--color-state-success);
+  }
+  
+  .trend-warning {
+    border-left: 4px solid var(--color-state-warning);
+  }
+  
+  .trend-error {
+    border-left: 4px solid var(--color-state-error);
+  }
+  
+  /* Severity-based card colors */
+  .severity-warning {
+    border-left: 4px solid var(--color-state-warning);
+  }
+  
+  .severity-error {
+    border-left: 4px solid var(--color-state-error);
+  }
+  
+  /* Header */
+  .statHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-2);
+  }
+  
+  .statLabel {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+  
+  /* Indicators */
+  .trendIndicator,
+  .severityIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--spacing-5);
+    height: var(--spacing-5);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+  }
+  
+  .trendIndicator.trend-success,
+  .severityIndicator.severity-success {
+    background-color: color-mix(in srgb, var(--color-state-success) 15%, transparent);
+    color: var(--color-state-success);
+  }
+  
+  .trendIndicator.trend-warning,
+  .severityIndicator.severity-warning {
+    background-color: color-mix(in srgb, var(--color-state-warning) 15%, transparent);
+    color: var(--color-state-warning);
+  }
+  
+  .trendIndicator.trend-error,
+  .severityIndicator.severity-error {
+    background-color: color-mix(in srgb, var(--color-state-error) 15%, transparent);
+    color: var(--color-state-error);
+  }
+  
+  /* Values */
+  .statValue {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-1);
+    margin-bottom: var(--spacing-2);
+  }
+  
+  .primaryValue {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-tight);
+  }
+  
+  .separator {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-tertiary);
+    margin: 0 var(--spacing-1);
+  }
+  
+  .errorValue {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-state-error);
+  }
+  
+  .statSubtext {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    line-height: var(--line-height-normal);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .statsGrid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-3);
+    }
+    
+    .statCard {
+      padding: var(--spacing-3);
+    }
+    
+    .primaryValue {
+      font-size: var(--font-size-xl);
+    }
+    
+    .errorValue {
+      font-size: var(--font-size-base);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .statsGrid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .statLabel {
+      font-size: var(--font-size-xs);
+    }
+    
+    .primaryValue {
+      font-size: var(--font-size-lg);
+    }
+    
+    .trendIndicator,
+    .severityIndicator {
+      width: var(--spacing-4);
+      height: var(--spacing-4);
+      font-size: var(--font-size-xs);
+    }
+  }
+  
+  /* Focus states for accessibility */
+  .statCard:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+  
+  /* Dark theme adjustments */
+  :global(.dark) .statCard:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .statCard {
+      border-width: 2px;
+    }
+    
+    .trend-success,
+    .trend-warning,
+    .trend-error,
+    .severity-warning,
+    .severity-error {
+      border-left-width: 6px;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .statCard {
+      transition: none;
+    }
+  }

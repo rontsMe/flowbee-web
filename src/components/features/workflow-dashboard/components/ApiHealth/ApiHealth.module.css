@@ -1,0 +1,301 @@
+/* src/components/features/workflow-dashboard/components/ApiHealth/ApiHealth.module.css */
+
+/**
+ * ApiHealth Styles
+ * 
+ * Purpose: External API monitoring and status display
+ * Architecture: CSS Modules using globals1.css design tokens
+ * Features: Status indicators, metric levels, responsive grid
+ */
+
+ .container {
+    margin-bottom: var(--spacing-6);
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-4);
+    gap: var(--spacing-4);
+  }
+  
+  .headerLeft {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+  }
+  
+  .title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+  
+  .summary {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+  
+  .summaryText {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+  
+  .headerRight {
+    flex-shrink: 0;
+  }
+  
+  .overallStatus {
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    text-align: center;
+    min-width: 140px;
+  }
+  
+  .status-healthy {
+    background-color: color-mix(in srgb, var(--color-state-success) 15%, transparent);
+    color: var(--color-state-success);
+    border: 1px solid var(--color-state-success);
+  }
+  
+  .status-degraded {
+    background-color: color-mix(in srgb, var(--color-state-warning) 15%, transparent);
+    color: var(--color-state-warning);
+    border: 1px solid var(--color-state-warning);
+  }
+  
+  .status-down {
+    background-color: color-mix(in srgb, var(--color-state-error) 15%, transparent);
+    color: var(--color-state-error);
+    border: 1px solid var(--color-state-error);
+  }
+  
+  /* API Grid */
+  .apiGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-4);
+  }
+  
+  /* API Cards */
+  .apiCard {
+    background-color: var(--color-surface-primary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    transition: all var(--duration-fast) var(--easing-ease);
+  }
+  
+  .apiCard:hover {
+    border-color: var(--color-border-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Status-based card borders */
+  .apiCard.status-healthy {
+    border-left: 4px solid var(--color-state-success);
+  }
+  
+  .apiCard.status-degraded {
+    border-left: 4px solid var(--color-state-warning);
+  }
+  
+  .apiCard.status-down {
+    border-left: 4px solid var(--color-state-error);
+  }
+  
+  /* API Header */
+  .apiHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-3);
+    gap: var(--spacing-2);
+  }
+  
+  .apiInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .apiName {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+  
+  .apiRegion {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    background-color: var(--color-surface-accent);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+  
+  .statusBadge {
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: capitalize;
+    flex-shrink: 0;
+  }
+  
+  .badge-healthy {
+    background-color: color-mix(in srgb, var(--color-state-success) 15%, transparent);
+    color: var(--color-state-success);
+  }
+  
+  .badge-degraded {
+    background-color: color-mix(in srgb, var(--color-state-warning) 15%, transparent);
+    color: var(--color-state-warning);
+  }
+  
+  .badge-down {
+    background-color: color-mix(in srgb, var(--color-state-error) 15%, transparent);
+    color: var(--color-state-error);
+  }
+  
+  /* API Metrics */
+  .apiMetrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-3);
+  }
+  
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+  
+  .metricLabel {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+  
+  .metricValue {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+  
+  /* Metric Level Colors */
+  .level-excellent {
+    color: var(--color-state-success);
+  }
+  
+  .level-good {
+    color: var(--color-text-primary);
+  }
+  
+  .level-warning {
+    color: var(--color-state-warning);
+  }
+  
+  .level-poor {
+    color: var(--color-state-error);
+  }
+  
+  /* Last Check */
+  .lastCheck {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    text-align: right;
+    border-top: 1px solid var(--color-border-secondary);
+    padding-top: var(--spacing-2);
+    margin-top: var(--spacing-2);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-3);
+    }
+    
+    .headerRight {
+      align-self: stretch;
+    }
+    
+    .apiGrid {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-3);
+    }
+    
+    .apiCard {
+      padding: var(--spacing-3);
+    }
+    
+    .apiMetrics {
+      grid-template-columns: 1fr;
+      gap: var(--spacing-2);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .apiHeader {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--spacing-2);
+    }
+    
+    .apiInfo {
+      justify-content: flex-start;
+    }
+    
+    .statusBadge {
+      align-self: flex-start;
+    }
+    
+    .apiMetrics {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* Focus states for accessibility */
+  .apiCard:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+  
+  /* Dark theme adjustments */
+  :global(.dark) .apiCard:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .apiCard {
+      border-width: 2px;
+    }
+    
+    .apiCard.status-healthy,
+    .apiCard.status-degraded,
+    .apiCard.status-down {
+      border-left-width: 6px;
+    }
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .apiCard {
+      transition: none;
+    }
+  }

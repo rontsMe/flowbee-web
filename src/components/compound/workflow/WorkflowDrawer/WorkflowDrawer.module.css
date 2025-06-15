@@ -1,0 +1,173 @@
+/* src/components/compound/workflow/WorkflowDrawer/WorkflowDrawer.module.css */
+
+/**
+ * WorkflowDrawer Styles
+ * 
+ * Purpose: Side panel for detailed workflow information
+ * Architecture: CSS Modules using globals1.css design tokens
+ * Features: Slide animation, backdrop, responsive design
+ */
+
+ .backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: 50; /* Use numeric z-index instead of CSS variable */
+    animation: fadeIn var(--duration-fast) var(--easing-ease);
+  }
+  
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 80%;
+    background-color: var(--color-surface-primary);
+    border-left: 1px solid var(--color-border-secondary);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    z-index: 51; /* Higher than backdrop */
+    transition: transform var(--duration-slow) var(--easing-spring);
+    overflow: hidden;
+    will-change: transform; /* Optimize for animations */
+  }
+  
+  .drawerClosed {
+    transform: translateX(100%);
+  }
+  
+  .drawerOpen {
+    transform: translateX(0);
+  }
+  
+  .content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-6) var(--spacing-6) var(--spacing-4);
+    border-bottom: 1px solid var(--color-border-secondary);
+    background-color: var(--color-surface-secondary);
+  }
+  
+  .headerLeft {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: var(--line-height-tight);
+  }
+  
+  .closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--spacing-8);
+    height: var(--spacing-8);
+    background: transparent;
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--easing-ease);
+  }
+  
+  .closeButton:hover {
+    background-color: var(--color-surface-accent);
+    border-color: var(--color-border-primary);
+    color: var(--color-text-primary);
+  }
+  
+  .closeButton:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+  
+  /* Body */
+  .body {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--spacing-6);
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .drawer {
+      width: 90%;
+      max-width: none;
+    }
+    
+    .header {
+      padding: var(--spacing-4);
+    }
+    
+    .title {
+      font-size: var(--font-size-xl);
+    }
+    
+    .body {
+      padding: var(--spacing-4);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .drawer {
+      width: 100%;
+      border-left: none;
+    }
+    
+    .header {
+      padding: var(--spacing-3);
+    }
+    
+    .title {
+      font-size: var(--font-size-lg);
+    }
+    
+    .body {
+      padding: var(--spacing-3);
+    }
+  }
+  
+  /* Dark theme adjustments */
+  :global(.dark) .backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  
+  :global(.dark) .drawer {
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .drawer {
+      transition: none;
+    }
+    
+    .backdrop {
+      animation: none;
+    }
+  }

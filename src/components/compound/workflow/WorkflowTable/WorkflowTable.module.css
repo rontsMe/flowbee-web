@@ -1,0 +1,185 @@
+/* src/components/compound/workflow/WorkflowTable/WorkflowTable.module.css */
+
+/**
+ * WorkflowTable Styles
+ * 
+ * Purpose: Tabular display of workflows with interactive elements
+ * Architecture: CSS Modules using globals1.css design tokens
+ * Features: Hover states, responsive design, status indicators
+ */
+
+ .tableContainer {
+    background-color: var(--color-surface-primary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+  }
+  
+  /* Header */
+  .thead {
+    background-color: var(--color-surface-secondary);
+  }
+  
+  .th {
+    padding: var(--spacing-3) var(--spacing-4);
+    text-align: left;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    border-bottom: 1px solid var(--color-border-secondary);
+  }
+  
+  /* Body */
+  .tbody {
+    background-color: var(--color-surface-primary);
+  }
+  
+  .tr {
+    border-bottom: 1px solid var(--color-border-secondary);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--easing-ease);
+  }
+  
+  .tr:hover {
+    background-color: var(--color-surface-accent);
+  }
+  
+  .tr:last-child {
+    border-bottom: none;
+  }
+  
+  .td {
+    padding: var(--spacing-3) var(--spacing-4);
+    vertical-align: middle;
+    color: var(--color-text-primary);
+  }
+  
+  /* Name Cell */
+  .nameCell {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+  
+  .nameRow {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+  }
+  
+  .workflowName {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-brand-primary);
+  }
+  
+  .statsRow {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    margin-left: calc(var(--spacing-3) + var(--spacing-2)); /* Align with name */
+  }
+  
+  /* Metric Values */
+  .metricValue {
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  /* Bottleneck Indicators */
+  .bottleneck {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+  
+  .severity-warning {
+    color: var(--color-state-warning);
+    background-color: color-mix(in srgb, var(--color-state-warning) 10%, transparent);
+  }
+  
+  .severity-error {
+    color: var(--color-state-error);
+    background-color: color-mix(in srgb, var(--color-state-error) 10%, transparent);
+  }
+  
+  /* Tags */
+  .tags {
+    display: flex;
+    gap: var(--spacing-1);
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    padding: var(--spacing-1) var(--spacing-2);
+    background-color: var(--color-surface-accent);
+    color: var(--color-brand-primary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-secondary);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .table {
+      font-size: var(--font-size-xs);
+    }
+    
+    .th,
+    .td {
+      padding: var(--spacing-2) var(--spacing-3);
+    }
+    
+    .nameCell {
+      gap: var(--spacing-0-5);
+    }
+    
+    .tags {
+      gap: var(--spacing-0-5);
+    }
+    
+    .tag {
+      padding: 2px var(--spacing-1);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    /* Hide less critical columns on mobile */
+    .th:nth-child(4), /* Data Rate */
+    .td:nth-child(4),
+    .th:nth-child(5), /* CPU */
+    .td:nth-child(5),
+    .th:nth-child(6), /* Memory */
+    .td:nth-child(6) {
+      display: none;
+    }
+  }
+  
+  /* Focus states for accessibility */
+  .tr:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: -2px;
+  }
+  
+  /* Dark theme adjustments */
+  :global(.dark) .tableContainer {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .tr {
+      transition: none;
+    }
+  }

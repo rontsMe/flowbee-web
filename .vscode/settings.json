@@ -19,8 +19,8 @@
         "**/.DS_Store": true,
         "**/Thumbs.db": true
     },
-    "editor.formatOnSave": true,
-    "eslint.run": "onSave",
+    "editor.formatOnSave": false,
+    // "eslint.run": "onSave",
     "typescript.tsserver.maxTsServerMemory": 4096,
     "typescript.tsserver.experimental.enableProjectDiagnostics": true,
     "typescript.tsserver.log": "off",

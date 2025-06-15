@@ -21,7 +21,6 @@ export {
   LineChart, 
   AreaChart, 
   BarChart,
-  ChartGrid,
   CHART_COMPONENTS,
   useChartData,
   useChartBounds
